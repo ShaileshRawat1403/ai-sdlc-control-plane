@@ -1,0 +1,54 @@
+name: Daily Start Report
+
+on:
+  schedule:
+    - cron: "30 3 * * *"
+  workflow_dispatch:
+
+permissions:
+  contents: write
+
+jobs:
+  create-daily-report:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Create daily report
+        shell: bash
+        run: |
+          DATE=$(TZ=Asia/Kolkata date +"%Y-%m-%d")
+          YEAR=$(TZ=Asia/Kolkata date +"%Y")
+          MONTH=$(TZ=Asia/Kolkata date +"%m")
+          mkdir -p daily/$YEAR/$MONTH
+
+          FILE="daily/$YEAR/$MONTH/$DATE.md"
+
+          if [ -f "$FILE" ]; then
+            echo "Daily report already exists: $FILE"
+            exit 0
+          fi
+
+          cp templates/daily-start-report.md "$FILE"
+          sed -i "s/{{date}}/$DATE/g" "$FILE"
+
+          cat > daily/latest.md <<EOF
+          # Latest Daily Report
+
+          Current report:
+
+          - \`$FILE\`
+
+          Update this pointer when a new daily report becomes active.
+          EOF
+
+      - name: Commit daily report
+        shell: bash
+        run: |
+          git config user.name "github-actions"
+          git config user.email "github-actions@github.com"
+          git add daily/
+          git commit -m "Create daily start report" || echo "No changes"
+          git push

@@ -1,0 +1,80 @@
+ecosystem:
+  name: "AI SDLC Control Plane"
+  owner: "Shailesh Rawat"
+  purpose: "Track AI-assisted SDLC status, branches, handoffs, decisions, and scope boundaries."
+  timezone: "Asia/Kolkata"
+
+systems:
+  dax:
+    name: "DAX"
+    role: "Governed execution workstation for AI-assisted SDLC"
+    repo: "ShaileshRawat1403/dax"
+    status: "active"
+    priority: "high"
+    current_branch: "feat/sdlc-verification-harness"
+    next_action: "Run local validation and decide PR readiness"
+    blocked_by: "Local validation pending"
+
+  rook:
+    name: "Rook"
+    role: "Repo/operator workbench for visible, governable AI-assisted work"
+    repo: "ShaileshRawat1403/rook"
+    status: "active"
+    priority: "high"
+    current_branch: "feat/sdlc-verification-harness"
+    next_action: "Validate SDLC module compile, then wire rook verify"
+    blocked_by: "Cargo validation pending"
+
+  soothsayer:
+    name: "Soothsayer"
+    role: "Multi-user governance workspace"
+    repo: "ShaileshRawat1403/soothsayer"
+    status: "paused"
+    priority: "medium"
+    current_branch: null
+    next_action: "Do not modify until DAX/Rook SDLC slice stabilizes"
+    blocked_by: "Focus limit"
+
+  picobot:
+    name: "Picobot"
+    role: "Lightweight ingress and channel bridge"
+    repo: null
+    status: "unmapped"
+    priority: "medium"
+    current_branch: null
+    next_action: "Confirm exact repository name"
+    blocked_by: "Repo mapping unresolved"
+
+  pruningmypothos:
+    name: "PruningMyPothos"
+    role: "Website, documentation, positioning, and content surface"
+    repo: null
+    status: "unmapped"
+    priority: "medium"
+    current_branch: null
+    next_action: "Confirm exact repository name"
+    blocked_by: "Repo mapping unresolved"
+
+rules:
+  active_system_limit: 2
+  active_branch_limit: 3
+  daily_report_time_ist: "09:00"
+  default_timezone: "Asia/Kolkata"
+
+scope_control:
+  active_now:
+    - "dax"
+    - "rook"
+  paused:
+    - "soothsayer"
+  unmapped:
+    - "picobot"
+    - "pruningmypothos"
+  not_now:
+    - "Dagger integration"
+    - "OPA policy rewrite"
+    - "Dashboard UI"
+    - "AI-generated daily summaries"
+    - "Cross-repo automated PR creation"
+    - "DAX Sentinel UI panel"
+    - "Rook swarm expansion"
