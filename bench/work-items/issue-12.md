@@ -2,7 +2,7 @@
 type: work-item
 source: github-issue
 issue: 12
-status: intake
+status: ready-for-review
 system: rook
 priority: high
 owner: Shailesh
@@ -31,3 +31,13 @@ Please implement rook verify CLI option.
 
 ## Human Notes
 This is critical for Phase 2 loop closure. Must verify compile warnings specifically.
+
+<!-- brainbench:generated:start -->
+
+### Advisory Triage Suggestions
+- **Suggested Priority**: `high`
+- **Triage Confidence**: `high`
+- **Triage Reason**: Touches active core SDLC verification system: rook.
+- **Action Required**: Human operator should review and update frontmatter settings.
+
+<!-- brainbench:generated:end -->

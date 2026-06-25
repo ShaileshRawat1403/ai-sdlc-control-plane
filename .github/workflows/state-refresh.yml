@@ -18,6 +18,8 @@ jobs:
     steps:
       - name: Checkout
         uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
 
       - name: Setup Bun
         uses: oven-sh/setup-bun@v1
@@ -34,10 +36,19 @@ jobs:
       - name: Run Memory Refresh
         run: bun run systems/toolsmith/scripts/memory-refresh.ts
 
+      - name: Run Evidence Completeness Agent
+        run: bun run systems/toolsmith/scripts/intelligence/evidence-completeness.ts
+
+      - name: Run Decision Gap Agent
+        run: bun run systems/toolsmith/scripts/intelligence/decision-gap.ts
+
+      - name: Run Weekly Operator Brief Agent
+        run: bun run systems/toolsmith/scripts/intelligence/weekly-operator-brief.ts
+
       - name: Commit state changes
         run: |
           git config user.name "github-actions"
           git config user.email "github-actions@github.com"
-          git add dashboard/ memory/active-context.md bench/agent-runs/
-          git commit -m "automation: refresh dashboards and memory context" || echo "No changes"
+          git add dashboard/ memory/active-context.md bench/agent-runs/ state/intelligence-scan.yml brain/decisions/drafts/ bench/validation/evidence-index.md
+          git commit -m "automation: refresh dashboards, memory, and advisory intelligence" || echo "No changes"
           git push

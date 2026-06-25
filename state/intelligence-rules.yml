@@ -1,0 +1,33 @@
+triage_agent:
+  can_write:
+    - "dashboard/triage-suggestions.md"
+    - "bench/agent-runs/"
+  can_update_generated_sections:
+    - "bench/work-items/"
+  cannot_overwrite:
+    - "priority"
+    - "owner"
+    - "human_notes"
+    - "sprint_commitment"
+
+decision_gap_agent:
+  can_write:
+    - "dashboard/decision-gaps.md"
+    - "bench/agent-runs/"
+    - "state/intelligence-scan.yml"
+  can_create_drafts:
+    - "brain/decisions/drafts/"
+  cannot_mark_accepted: true
+
+evidence_agent:
+  can_write:
+    - "dashboard/evidence-gaps.md"
+    - "bench/validation/evidence-index.md"
+    - "bench/agent-runs/"
+
+weekly_operator_brief:
+  can_write:
+    - "dashboard/weekly-report.md"
+    - "dashboard/intelligence-summary.md"
+    - "memory/active-context.md"
+    - "bench/agent-runs/"

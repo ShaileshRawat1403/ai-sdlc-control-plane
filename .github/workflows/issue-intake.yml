@@ -35,10 +35,13 @@ jobs:
           ISSUE_BODY: ${{ github.event.issue.body }}
           ISSUE_LABELS: ${{ join(github.event.issue.labels.*.name, ',') }}
 
+      - name: Run Work Item Triage
+        run: bun run systems/toolsmith/scripts/intelligence/work-item-triage.ts
+
       - name: Commit changes
         run: |
           git config user.name "github-actions"
           git config user.email "github-actions@github.com"
-          git add bench/work-items/ state/active-sprint.yml dashboard/sprint-status.md bench/agent-runs/
+          git add bench/work-items/ state/active-sprint.yml dashboard/sprint-status.md dashboard/triage-suggestions.md bench/agent-runs/
           git commit -m "automation: intake issue #${{ github.event.issue.number }}" || echo "No changes"
           git push

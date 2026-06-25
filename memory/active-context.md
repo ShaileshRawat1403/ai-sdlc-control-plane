@@ -19,3 +19,11 @@ We are running in the **Brain + Bench V2** control plane environment. The active
 ## Active Decisions
 - Pointer stubs left in place to redirect legacy paths.
 - Active refactor log recorded in `brain/decisions/2026-06-25-brainbench-v2-identity.md`.
+
+<!-- brainbench:generated:weekly-focus:start -->
+
+- **Current Sprint Progress**: 2/4 completed (50%).
+- **Quality Gates Check**: 0 decision gaps, 1 evidence gaps detected.
+- **Recommended Action**: Remediate state mismatch alerts.
+
+<!-- brainbench:generated:weekly-focus:end -->
