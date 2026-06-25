@@ -1,10 +1,16 @@
 last_decision_gap_scan:
-  sha: c57f7490cdce60a4cb3fb1beb1ed74f4e3bddfbc
-  scanned_at: 2026-06-25T03:20:20.934Z
+  sha: 2f4d757b7afe52cfdafd9eaa9effa6194ac3f7fb
+  scanned_at: 2026-06-25T13:11:13.925Z
   result: success
 open_gaps: []
 resolved_gaps:
   - id: gap-2026-06-25-c57f749-state-memory-model
     resolved_at: 2026-06-25T03:20:20.914Z
     by_decision: 2026-06-25-brainbench-v0.3-intelligence-approval.md
-dismissed_gaps: []
+  - id: gap-2026-06-25-2f4d757-toolsmith-script-architecture
+    resolved_at: 2026-06-25T13:11:13.895Z
+    by_decision: 2026-06-25-brainbench-v0.3-intelligence-approval.md
+dismissed_gaps:
+  - id: gap-2026-06-25-2f4d757-state-memory-model
+    dismissed_at: 2026-06-25T13:12:00.000Z
+    reason: Mechanical sprint backlog updates from issue-intake script.

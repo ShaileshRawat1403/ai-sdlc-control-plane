@@ -6,7 +6,7 @@
 
 - **Detected Evidence Gaps**: 1
 - **Detected Decision Gaps**: 0
-- **Detected Triage Warnings**: 1
+- **Detected Triage Warnings**: 2
 
 ### Detail Dashboards
 - [Evidence Gaps Dashboard](file:///Users/ananyalayek/.gemini/antigravity/scratch/ai-sdlc-control-plane/dashboard/evidence-gaps.md)

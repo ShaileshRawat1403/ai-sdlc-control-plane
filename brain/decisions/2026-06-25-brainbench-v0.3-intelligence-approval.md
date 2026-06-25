@@ -2,6 +2,7 @@
 type: decision-log
 status: accepted
 gap_id: gap-2026-06-25-c57f749-state-memory-model
+resolves: gap-2026-06-25-2f4d757-toolsmith-script-architecture
 date: 2026-06-25
 system: BrainBench
 ---

@@ -9,7 +9,7 @@ status: success
 
 ## Execution Summary
 - **Gaps Detected**: 1
-- **Ecosystem Backlog Inspected**: 1 tasks
+- **Ecosystem Backlog Inspected**: 2 tasks
 - **Dry Run**: false
 
 ## Actions Taken

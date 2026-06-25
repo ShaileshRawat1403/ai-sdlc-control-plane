@@ -2,10 +2,11 @@
 type: work-item
 source: github-issue
 issue: 13
-status: intake
+status: ready-for-review
 system: tessera
-priority: unset
-owner: unset
+priority: low
+owner: antigravity
+pr: 13
 created: 2026-06-25
 last_updated: 2026-06-25
 ---
