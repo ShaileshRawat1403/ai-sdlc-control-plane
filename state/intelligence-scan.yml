@@ -1,6 +1,6 @@
 last_decision_gap_scan:
-  sha: b38fb6af2dd732348df4be23e205c7c9551be298
-  scanned_at: 2026-06-25T14:59:30.900Z
+  sha: 13dbf3f1137430262f35a001a113a8cb4604f78f
+  scanned_at: 2026-06-25T15:01:16.454Z
   result: success
 open_gaps: []
 resolved_gaps:
@@ -38,3 +38,6 @@ dismissed_gaps:
   - id: gap-2026-06-25-0823ee7-state-memory-model
     dismissed_at: 2026-06-25T13:36:00.000Z
     reason: Mechanical sprint backlog updates.
+  - id: gap-2026-06-25-13dbf3f-toolsmith-script-architecture
+    dismissed_at: 2026-06-25T15:02:00.000Z
+    reason: Approved and documented in V0.4 decision log.
