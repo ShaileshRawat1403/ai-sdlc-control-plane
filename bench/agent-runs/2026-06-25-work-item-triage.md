@@ -8,8 +8,8 @@ status: success
 # Agent Run: Work Item Triage Scan
 
 ## Execution Summary
-- **Items Triaged**: 1
-- **Action Required Flags**: 0
+- **Items Triaged**: 2
+- **Action Required Flags**: 1
 - **Dry Run**: false
 
 ## Actions Taken

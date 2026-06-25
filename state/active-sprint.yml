@@ -17,3 +17,5 @@ sprint:
       status: in-progress
     - task: issue-12
       status: intake
+    - task: issue-13
+      status: intake
