@@ -2,10 +2,11 @@
 type: work-item
 source: github-issue
 issue: 14
-status: intake
+status: ready-for-review
 system: flowright
-priority: unset
-owner: unset
+priority: medium
+owner: antigravity
+pr: 14
 created: 2026-06-25
 last_updated: 2026-06-25
 ---
