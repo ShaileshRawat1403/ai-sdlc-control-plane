@@ -11,7 +11,7 @@ status: success
 - **Open Gaps**: 0
 - **Resolved Gaps**: 2
 - **Dismissed Gaps**: 13
-- **Comparison Window**: 65710c0a68e456105643043124b38ad4ed9d04bb -> 970dddb58de614b78141fc07505cc36ae8e0022d
+- **Comparison Window**: 970dddb58de614b78141fc07505cc36ae8e0022d -> 8b0e295e8eb0d84bfd06d32da7b767cad82f159d
 - **Dry Run**: false
 
 ## Actions Taken
