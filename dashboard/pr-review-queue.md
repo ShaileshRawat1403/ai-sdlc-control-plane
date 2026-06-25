@@ -6,9 +6,7 @@
 
 | PR ID | Risk Level | Author | Review Status | Date |
 |---|---|---|---|---|
-| #13 | **HIGH** | developer | `merged` | 2026-06-25 |
-| #15 | **HIGH** | developer | `merged` | 2026-06-25 |
-| #14 | **HIGH** | developer | `merged` | 2026-06-25 |
+| - | - | - | - | - |
 
 <!-- brainbench:generated:end -->
 

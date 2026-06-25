@@ -1,6 +1,6 @@
 last_decision_gap_scan:
-  sha: 8b0e295e8eb0d84bfd06d32da7b767cad82f159d
-  scanned_at: 2026-06-25T15:51:17.932Z
+  sha: ff82bedbfab934c1d56d911c507a7bb645029470
+  scanned_at: 2026-06-25T15:54:17.542Z
   result: success
 open_gaps: []
 resolved_gaps:

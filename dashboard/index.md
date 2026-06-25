@@ -1,37 +1,101 @@
 # BrainBench Dashboard Index
 
-<!-- brainbench:generated:start -->
+<!-- brainbench:generated:visual-snapshot:start -->
 
-## Operational Control Surface
-- **Last Updated**: 2026-06-25T15:48:50.544Z
+## Operating Snapshot
 
-### Current Status
-- **Active Sprint**: `Brain + Bench Foundation` (`active`)
-- **Ecosystem Registry**: 3 active systems
+| Area | Status | Signal |
+|---|---|---|
+| Active Sprint | 5 / 7 complete | On track |
+| Field Trial | 3 / 3 complete | Closed |
+| Open PR Reviews | 0 | Clear |
+| Evidence Gaps | 1 | Attention |
+| Decision Gaps | 0 | Clear |
+| Needs Human Review | 1 | Review issue-12 |
 
-### Progress Metrics
-- **Active Sprint Progress**: 5 / 7 (71%)
-- **Field Trial Progress**: 3 / 3 (100%)
+<!-- brainbench:generated:visual-snapshot:end -->
 
-### Quality Gates Summary
-- **Open Risks (PR Queue)**: 3 items in review
-- **Open Evidence Gaps**: 1 items flagged
-- **Open Decision Gaps**: 0 items flagged
+<!-- brainbench:generated:visual-sdlc-flow:start -->
 
-### Needs Human Review
-- Task `issue-12` is `ready-for-review`
+## SDLC Pipeline
 
-### Recommended Actions
-- **Verify ready-for-review tasks**: Audit status and validation logs for `issue-12`.
-- **Audit PR review queue**: Check risk assessments for pending pull requests.
-- **Remediate evidence gaps**: Link required PR numbers to ready/done tasks in active sprint backlog.
+```mermaid
+flowchart LR
+  A["Intake: 0"] --> B["Triage: 2"]
+  B --> C["In Progress: 1"]
+  C --> D["PR Review: 0"]
+  D --> E["Evidence Gaps: 1"]
+  E --> F["Decision Gaps: 0"]
+  F --> G["Done: 5"]
 
+  A:::active
+  B:::active
+  C:::active
+  D:::clear
+  E:::warning
+  F:::clear
+  G:::done
 
-### Latest Operator Briefs
-- [Daily Pulse (Operations)](file:///Users/ananyalayek/.gemini/antigravity/scratch/brainbench/dashboard/daily-report.md)
-- [Weekly Review (Trends)](file:///Users/ananyalayek/.gemini/antigravity/scratch/brainbench/dashboard/weekly-report.md)
+  classDef active fill:#f5f5f5,stroke:#555,stroke-width:1px;
+  classDef clear fill:#eef7ee,stroke:#555,stroke-width:1px;
+  classDef warning fill:#fff3cd,stroke:#555,stroke-width:1px;
+  classDef done fill:#e8f0fe,stroke:#555,stroke-width:1px;
+```
 
-<!-- brainbench:generated:end -->
+<!-- brainbench:generated:visual-sdlc-flow:end -->
+
+<!-- brainbench:generated:visual-quality-gates:start -->
+
+## Quality Gates
+
+| Gate | Open | Status | Action |
+|---|---:|---|---|
+| PR Review | 0 | Clear | None |
+| Evidence Gaps | 1 | Attention | Link required PR numbers to tasks |
+| Decision Gaps | 0 | Clear | None |
+| Human Review | 1 | Attention | Review issue-12 |
+
+<!-- brainbench:generated:visual-quality-gates:end -->
+
+<!-- brainbench:generated:visual-system-health:start -->
+
+## System Health
+
+| System | State | Current Focus | Risk | Evidence |
+|---|---|---|---|---|
+| **BrainBench** | Active | Dashboard clarity | Low | Complete |
+| **DAX** | Active | Verification harness | Low | Complete |
+| **Rook** | Active | Verification harness | Low | Complete |
+| **Soothsayer** | Paused | Governance catalog | Clear | Complete |
+| **Flowright** | Paused | Product-fit map | Clear | Complete |
+| **ToolSmith** | Paused | Utility roadmap | Clear | Complete |
+| **Tessera** | Paused | Repo-to-use-case | Clear | Complete |
+| **Picobot** | Unmapped | Ingress bridge | Clear | Complete |
+| **PruningMyPothos** | Unmapped | Documentation surface | Clear | Complete |
+
+<!-- brainbench:generated:visual-system-health:end -->
+
+<!-- brainbench:generated:visual-human-review:start -->
+
+## Needs Human Review
+
+| Item | Reason | Suggested Action |
+|---|---|---|
+| issue-12 | Backlog item still pending review | Confirm owner / close / move to next sprint |
+
+<!-- brainbench:generated:visual-human-review:end -->
+
+<!-- brainbench:generated:visual-agent-advisory:start -->
+
+## Agent Advisory
+
+| Signal | Source | Confidence | Action |
+|---|---|---|---|
+| 1 evidence gaps found | Evidence Agent | High | Link PRs to backlog tasks |
+| No open decision gaps | Decision Gap Agent | High | None |
+| Sprint state updated | PR Review Agent | Medium | Review if unexpected |
+
+<!-- brainbench:generated:visual-agent-advisory:end -->
 
 ## Human Notes
 [Add manual notes here. These will be preserved by refresh script.]
