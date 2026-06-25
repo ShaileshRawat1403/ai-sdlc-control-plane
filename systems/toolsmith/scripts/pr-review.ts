@@ -49,11 +49,13 @@ console.log(`[PR Review] Detected ${changedFiles.length} changed files:`, change
 // 2. Load Risk Rules
 let restrictedPaths: string[] = [];
 let requiresHumanReview: string[] = [];
+let stateClassification: any = {};
 if (fs.existsSync(RISK_RULES_PATH)) {
   try {
     const rules = parse(fs.readFileSync(RISK_RULES_PATH, 'utf-8'));
     restrictedPaths = rules.restricted_paths || [];
     requiresHumanReview = rules.requires_human_review || [];
+    stateClassification = rules.state_classification || {};
   } catch (e) {
     console.error('Failed to parse risk rules config:', e);
   }
@@ -73,20 +75,59 @@ function matchesPattern(file: string, pattern: string): boolean {
 let riskLevel = 'low';
 const triggeredRestrictions: string[] = [];
 const triggeredHumanReviews: string[] = [];
+const triggeredOperational: string[] = [];
+const operationalReasons: string[] = [];
+
+// Helper for operational file reasons
+function getOperationalReason(file: string): string {
+  if (file === 'state/active-sprint.yml') {
+    return 'sprint state updated by issue intake / lifecycle update';
+  }
+  if (file === 'state/dashboard-state.yml') {
+    return 'dashboard operational metrics refreshed';
+  }
+  if (file === 'state/memory-index.yml') {
+    return 'memory index refreshed';
+  }
+  return 'operational state updated';
+}
 
 for (const file of changedFiles) {
-  for (const pattern of restrictedPaths) {
-    if (matchesPattern(file, pattern)) {
-      riskLevel = 'high';
-      triggeredRestrictions.push(`${file} (matched: ${pattern})`);
+  let matchedState = false;
+  
+  if (stateClassification.restricted && stateClassification.restricted.some((p: string) => matchesPattern(file, p))) {
+    riskLevel = 'high';
+    triggeredRestrictions.push(`${file} (matched restricted state)`);
+    matchedState = true;
+  } else if (stateClassification.review_required && stateClassification.review_required.some((p: string) => matchesPattern(file, p))) {
+    if (riskLevel !== 'high') {
+      riskLevel = 'medium';
     }
+    triggeredHumanReviews.push(`${file} (matched review-required state)`);
+    matchedState = true;
+  } else if (stateClassification.operational_generated && stateClassification.operational_generated.some((p: string) => matchesPattern(file, p))) {
+    if (riskLevel !== 'high') {
+      riskLevel = 'medium';
+    }
+    triggeredOperational.push(file);
+    operationalReasons.push(getOperationalReason(file));
+    matchedState = true;
   }
-  for (const pattern of requiresHumanReview) {
-    if (matchesPattern(file, pattern)) {
-      if (riskLevel !== 'high') {
-        riskLevel = 'medium';
+
+  if (!matchedState) {
+    for (const pattern of restrictedPaths) {
+      if (matchesPattern(file, pattern)) {
+        riskLevel = 'high';
+        triggeredRestrictions.push(`${file} (matched: ${pattern})`);
       }
-      triggeredHumanReviews.push(`${file} (matched: ${pattern})`);
+    }
+    for (const pattern of requiresHumanReview) {
+      if (matchesPattern(file, pattern)) {
+        if (riskLevel !== 'high') {
+          riskLevel = 'medium';
+        }
+        triggeredHumanReviews.push(`${file} (matched: ${pattern})`);
+      }
     }
   }
 }
@@ -118,15 +159,30 @@ if (riskLevel === 'high') {
 > **HIGH RISK PATHS TOUCHED.** This PR modifies restricted files. Human verification is required before promotion/merge.
 >
 > **Restricted files modified:**
-${triggeredRestrictions.map(f => `> - \`${f}\``).join('\n')}
+> ${triggeredRestrictions.map(f => `> - \`${f}\``).join('\n')}
 `;
 } else if (riskLevel === 'medium') {
-  reviewBody += `> [!WARNING]
+  if (triggeredHumanReviews.length > 0) {
+    reviewBody += `> [!WARNING]
 > **MEDIUM RISK / MANUAL REVIEW REQUIRED.** This PR modifies systems configuration or decision logs.
 >
 > **Files requiring review:**
-${triggeredHumanReviews.map(f => `> - \`${f}\``).join('\n')}
+> ${triggeredHumanReviews.map(f => `> - \`${f}\``).join('\n')}
 `;
+    if (triggeredOperational.length > 0) {
+      reviewBody += `>
+> **Operational state updates also detected:**
+> ${triggeredOperational.map(f => `> - \`${f}\``).join('\n')}
+`;
+    }
+  } else {
+    reviewBody += `- **Risk Level**: MEDIUM
+- **Change Type**: operational state update
+- **Decision Required**: no
+- **Human Review**: recommended
+- **Reason**: ${operationalReasons.join('; ')}
+`;
+  }
 } else {
   reviewBody += `> [!NOTE]
 > **LOW RISK.** No restricted paths were touched. Code changes conform to agent boundaries.

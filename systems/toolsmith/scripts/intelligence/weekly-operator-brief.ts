@@ -70,6 +70,13 @@ const completedTasks = backlog.filter((t: any) => t.status === 'done').length;
 const totalTasks = backlog.length;
 const completionPercentage = totalTasks > 0 ? Math.round((completedTasks / totalTasks) * 100) : 0;
 
+// Load field trial metrics from active sprint registry
+const fieldTrial = activeSprint.field_trial || {};
+const fieldTrialTasks = backlog.filter((t: any) => (fieldTrial.work_items || []).includes(t.task));
+const completedFieldTrialTasks = fieldTrialTasks.filter((t: any) => t.status === 'done').length;
+const totalFieldTrialTasks = fieldTrialTasks.length;
+const fieldTrialPercentage = totalFieldTrialTasks > 0 ? Math.round((completedFieldTrialTasks / totalFieldTrialTasks) * 100) : 0;
+
 // Load active focus from ecosystem
 let ecosystemSystems: any = {};
 if (fs.existsSync(ECOSYSTEM_PATH)) {
@@ -90,7 +97,8 @@ for (const sysId in ecosystemSystems) {
 const dateStr = new Date().toISOString().split('T')[0];
 let reportContent = `## Operational Brief Summary (${dateStr})
 - **Report Mode**: \`${briefMode}\`
-- **Sprint Completion**: ${completedTasks} / ${totalTasks} tasks (${completionPercentage}%)
+- **Active Sprint Progress**: ${completedTasks} / ${totalTasks} tasks (${completionPercentage}%)
+- **Field Trial Progress**: ${completedFieldTrialTasks} / ${totalFieldTrialTasks} tasks (${fieldTrialPercentage}%)
 - **Active Systems**: ${activeSystems.join(', ') || 'none'}
 
 ### Alerts & Gaps
@@ -128,7 +136,8 @@ updateGeneratedBlock(WEEKLY_REPORT_PATH, reportContent, '');
 updateGeneratedBlock(INTELLIGENCE_SUMMARY_PATH, summaryContent, '');
 
 // 3. Update active-context.md in the weekly-focus section
-const activeContextWeeklyFocus = `- **Current Sprint Progress**: ${completedTasks}/${totalTasks} completed (${completionPercentage}%).
+const activeContextWeeklyFocus = `- **Active Sprint Progress**: ${completedTasks}/${totalTasks} completed (${completionPercentage}%).
+- **Field Trial Progress**: ${completedFieldTrialTasks}/${totalFieldTrialTasks} completed (${fieldTrialPercentage}%).
 - **Quality Gates Check**: ${decisionGapsCount} decision gaps, ${evidenceGapsCount} evidence gaps detected.
 - **Recommended Action**: ${decisionGapsCount > 0 || evidenceGapsCount > 0 ? 'Remediate state mismatch alerts.' : 'Proceed with backlog execution.'}`;
 

@@ -132,6 +132,21 @@ const changedRestrictedFiles = changedFiles.filter(file => {
   return restrictedFolders.some(folder => file.startsWith(folder) || file === folder);
 });
 
+// Helper to check if a file is a mechanical update
+function isMechanicalUpdate(file: string): boolean {
+  if (file === 'state/active-sprint.yml') return true;
+  if (file === 'state/dashboard-state.yml') return true;
+  if (file === 'state/memory-index.yml') return true;
+  if (file === 'state/intelligence-scan.yml') return true;
+  if (file.startsWith('dashboard/')) return true;
+  if (file === 'bench/validation/evidence-index.md') return true;
+  if (file === 'memory/active-context.md') return true;
+  if (file.startsWith('bench/agent-runs/')) return true;
+  if (file.startsWith('bench/pr-reviews/')) return true;
+  if (file.startsWith('bench/validation/')) return true;
+  return false;
+}
+
 // Map file to theme
 function getFileTheme(file: string): string {
   if (file.startsWith('.github/workflows/')) {
@@ -149,6 +164,10 @@ function getFileTheme(file: string): string {
 // Group changed restricted files by theme
 const filesByTheme: Record<string, string[]> = {};
 for (const file of changedRestrictedFiles) {
+  if (isMechanicalUpdate(file)) {
+    console.log(`[Decision Gap] Ignoring mechanical/operational update: ${file}`);
+    continue;
+  }
   const theme = getFileTheme(file);
   if (!filesByTheme[theme]) {
     filesByTheme[theme] = [];

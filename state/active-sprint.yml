@@ -23,3 +23,10 @@ sprint:
       status: done
     - task: issue-15
       status: done
+  field_trial:
+    name: brainbench-v0.3-field-trial
+    status: complete
+    work_items:
+      - issue-13
+      - issue-14
+      - issue-15

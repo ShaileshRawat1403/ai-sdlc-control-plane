@@ -12,5 +12,5 @@ status: success
 - **Dry Run**: false
 
 ## Actions Taken
-- Refreshed all markdown dashboards under `dashboard/`.
+- Refreshed all markdown dashboards under `dashboard/`, including new `index.md` control surface.
 - Maintained human notes sections utilizing boundary comments.

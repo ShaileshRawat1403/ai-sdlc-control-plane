@@ -22,7 +22,8 @@ We are running in the **Brain + Bench V2** control plane environment. The active
 
 <!-- brainbench:generated:weekly-focus:start -->
 
-- **Current Sprint Progress**: 5/7 completed (71%).
+- **Active Sprint Progress**: 5/7 completed (71%).
+- **Field Trial Progress**: 3/3 completed (100%).
 - **Quality Gates Check**: 0 decision gaps, 1 evidence gaps detected.
 - **Recommended Action**: Remediate state mismatch alerts.
 

@@ -3,7 +3,6 @@ restricted_paths:
   - "CONTROL.md"
   - "AGENTS.md"
   - "ecosystem.yml"
-  - "state/"
   - "**/.env"
   - "**/secrets*"
   - "**/deploy*"
@@ -14,3 +13,14 @@ requires_human_review:
   - "control/rules/"
   - "control/risk-register/"
   - "systems/*/status.md"
+
+state_classification:
+  restricted:
+    - "state/intelligence-rules.yml"
+    - "state/intelligence-scan.yml"
+  review_required:
+    - "state/active-systems.yml"
+  operational_generated:
+    - "state/active-sprint.yml"
+    - "state/dashboard-state.yml"
+    - "state/memory-index.yml"

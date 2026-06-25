@@ -164,17 +164,89 @@ for (const sysId in ecosystemSystems) {
 }
 updateGeneratedSection(path.join(DASHBOARD_DIR, 'system-health.md'), systemHealthContent, 'System Health');
 
+// Helper to count rows in table
+function countTableRows(filePath: string): number {
+  if (!fs.existsSync(filePath)) return 0;
+  const content = fs.readFileSync(filePath, 'utf-8');
+  const lines = content.split('\n');
+  let rowCount = 0;
+  let inTable = false;
+  for (const line of lines) {
+    if (line.includes('|---|---|') || line.includes('|---|')) {
+      inTable = true;
+      continue;
+    }
+    if (inTable && line.startsWith('|') && !line.includes('| - |') && !line.includes('|---|')) {
+      rowCount++;
+    }
+    if (inTable && line.trim() === '') {
+      inTable = false;
+    }
+  }
+  return rowCount;
+}
+
+const completedTasks = backlog.filter((t: any) => t.status === 'done').length;
+const totalTasks = backlog.length;
+const completionPercentage = totalTasks > 0 ? Math.round((completedTasks / totalTasks) * 100) : 0;
+
+// Load field trial metrics from active sprint registry
+const fieldTrial = activeSprint.field_trial || {};
+const fieldTrialTasks = backlog.filter((t: any) => (fieldTrial.work_items || []).includes(t.task));
+const completedFieldTrialTasks = fieldTrialTasks.filter((t: any) => t.status === 'done').length;
+const totalFieldTrialTasks = fieldTrialTasks.length;
+const fieldTrialPercentage = totalFieldTrialTasks > 0 ? Math.round((completedFieldTrialTasks / totalFieldTrialTasks) * 100) : 0;
+
 // 6. Generate Weekly Report Dashboard
 let weeklyReportContent = `## Weekly Operating Metrics
 
-- **Last Updated**: ${dashState.last_generation || new Date().toISOString()}
-- **Active Systems Count**: ${dashState.metrics?.active_systems || 0}
-- **Paused Systems Count**: ${dashState.metrics?.paused_systems || 0}
-- **Sprint Progress**: ${dashState.metrics?.sprint_progress_percentage || 0}%
+- **Last Updated**: ${new Date().toISOString()}
+- **Active Systems Count**: ${Object.keys(activeSystems).length || 0}
+- **Active Sprint Progress**: ${completedTasks} / ${totalTasks} (${completionPercentage}%)
+- **Field Trial Progress**: ${completedFieldTrialTasks} / ${totalFieldTrialTasks} (${fieldTrialPercentage}%)
 `;
 updateGeneratedSection(path.join(DASHBOARD_DIR, 'weekly-report.md'), weeklyReportContent, 'Weekly Report');
 
-// 7. Write execution log
+// 7. Generate dashboard/index.md Entry Point
+const evidenceGapsCount = countTableRows(path.join(DASHBOARD_DIR, 'evidence-gaps.md'));
+const decisionGapsCount = countTableRows(path.join(DASHBOARD_DIR, 'decision-gaps.md'));
+const prQueueCount = countTableRows(path.join(DASHBOARD_DIR, 'pr-review-queue.md'));
+const needsReviewTasks = backlog.filter((t: any) => t.status === 'ready-for-review');
+
+let indexContent = `## Operational Control Surface
+- **Last Updated**: ${new Date().toISOString()}
+
+### Current Status
+- **Active Sprint**: \`${activeSprint.name || 'none'}\` (\`${activeSprint.status || 'inactive'}\`)
+- **Ecosystem Registry**: ${Object.keys(activeSystems).length} active systems
+
+### Progress Metrics
+- **Active Sprint Progress**: ${completedTasks} / ${totalTasks} (${completionPercentage}%)
+- **Field Trial Progress**: ${completedFieldTrialTasks} / ${totalFieldTrialTasks} (${fieldTrialPercentage}%)
+
+### Quality Gates Summary
+- **Open Risks (PR Queue)**: ${prQueueCount} items in review
+- **Open Evidence Gaps**: ${evidenceGapsCount} items flagged
+- **Open Decision Gaps**: ${decisionGapsCount} items flagged
+
+### Needs Human Review
+`;
+if (needsReviewTasks.length > 0) {
+  for (const t of needsReviewTasks) {
+    indexContent += `- Task \`${t.task}\` is \`ready-for-review\`\n`;
+  }
+} else {
+  indexContent += `- No tasks currently requiring human review.\n`;
+}
+
+indexContent += `
+### Latest Operator Brief
+Refer to the detailed [Weekly Report](file://${path.join(DASHBOARD_DIR, 'weekly-report.md')}) for the operational brief.
+`;
+
+updateGeneratedSection(path.join(DASHBOARD_DIR, 'index.md'), indexContent, 'BrainBench Dashboard Index');
+
+// 8. Write execution log
 const dateStr = new Date().toISOString().split('T')[0];
 const agentRunFileName = `${dateStr}-dashboard-refresh.md`;
 const agentRunFilePath = path.join(AGENT_RUNS_DIR, agentRunFileName);
@@ -193,7 +265,7 @@ status: success
 - **Dry Run**: ${dryRun}
 
 ## Actions Taken
-- Refreshed all markdown dashboards under \`dashboard/\`.
+- Refreshed all markdown dashboards under \`dashboard/\`, including new \`index.md\` control surface.
 - Maintained human notes sections utilizing boundary comments.
 `;
 

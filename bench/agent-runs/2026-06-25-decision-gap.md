@@ -11,7 +11,7 @@ status: success
 - **Open Gaps**: 0
 - **Resolved Gaps**: 2
 - **Dismissed Gaps**: 9
-- **Comparison Window**: 0823ee7972cf98baf476f98b7eea901a8b99ffc1 -> 0823ee7972cf98baf476f98b7eea901a8b99ffc1
+- **Comparison Window**: 0823ee7972cf98baf476f98b7eea901a8b99ffc1 -> b38fb6af2dd732348df4be23e205c7c9551be298
 - **Dry Run**: false
 
 ## Actions Taken
