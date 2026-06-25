@@ -1,20 +1,15 @@
-# Weekly Operating Report
+# Weekly Report
 
-Week of: **2026-06-22 to 2026-06-29**
+<!-- brainbench:generated:start -->
 
-## Key Achievements
-- Completed Phase 1 refactoring to V2 identity (Brain + Bench).
-- Registered new systems: Flowright, ToolSmith, Tessera, BrainBench.
-- Set up memory structures (Claim Register, Decision Map, Active Context) and machine-readable states.
+## Weekly Operating Metrics
 
-## Ecosystem Velocity
-- Active Systems: 3
-- Active Branches: 3
-- Completed Sprint Tasks: 6
+- **Last Updated**: 2026-06-25T07:52:48+05:30
+- **Active Systems Count**: 3
+- **Paused Systems Count**: 4
+- **Sprint Progress**: 66%
 
-## Risks & Blockers
-- DAX and Rook branches still require verification before PR promotion.
+<!-- brainbench:generated:end -->
 
-## Next Week Focus
-- Implement automated Issue intake routines (Phase 2).
-- Update and sync GitHub project view dashboard.
+## Human Notes
+[Add manual notes here. These will be preserved by refresh script.]

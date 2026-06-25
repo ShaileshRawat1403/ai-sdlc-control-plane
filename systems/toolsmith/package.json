@@ -1,0 +1,9 @@
+{
+  "name": "toolsmith-automation",
+  "version": "0.1.0",
+  "description": "Internal automation scripts for BrainBench control plane",
+  "type": "module",
+  "dependencies": {
+    "yaml": "^2.4.5"
+  }
+}

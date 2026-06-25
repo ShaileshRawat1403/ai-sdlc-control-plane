@@ -1,10 +1,15 @@
 # Active Context
 
 ## Last Updated
-2026-06-25T07:52:48+05:30
+2026-06-25T02:30:15.991Z
 
 ## Current Focus
-We are completing Phase 1 of the **Brain + Bench V2 Refactor**. This involves reorganizing the repository into `brain/`, `bench/`, `control/`, `dashboard/`, `memory/`, `state/`, and `systems/` namespaces.
+We are running in the **Brain + Bench V2** control plane environment. The active system workflows are governed by automated triggers.
+
+## Active Focus Systems
+- BrainBench
+- DAX
+- Rook
 
 ## Active Branches
 - `systems/brainbench`: `feat/brainbench-v2-refactor` (active)
@@ -12,5 +17,5 @@ We are completing Phase 1 of the **Brain + Bench V2 Refactor**. This involves re
 - `systems/rook`: `feat/sdlc-verification-harness` (active)
 
 ## Active Decisions
-- Redirection stubs left in place to avoid path breakages.
-- Added identity shift decision log to `brain/decisions/2026-06-25-brainbench-v2-identity.md`.
+- Pointer stubs left in place to redirect legacy paths.
+- Active refactor log recorded in `brain/decisions/2026-06-25-brainbench-v2-identity.md`.

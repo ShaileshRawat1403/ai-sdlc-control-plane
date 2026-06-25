@@ -1,0 +1,93 @@
+name: PR Review
+
+on:
+  pull_request:
+    types: [opened, reopened, synchronize, closed, labeled]
+  workflow_dispatch:
+
+concurrency:
+  group: pr-review-${{ github.event.pull_request.number || github.run_id }}
+  cancel-in-progress: true
+
+permissions:
+  contents: write
+  pull-requests: write
+  issues: write
+
+jobs:
+  review:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+
+      - name: Setup Bun
+        uses: oven-sh/setup-bun@v1
+        with:
+          bun-version: latest
+
+      - name: Install dependencies
+        run: bun install
+        working-directory: systems/toolsmith
+
+      - name: Determine Review Mode
+        id: mode
+        shell: bash
+        run: |
+          PERSIST="false"
+          MERGED="false"
+          
+          if [[ "${{ github.event_name }}" == "pull_request" ]]; then
+            if [[ "${{ github.event.action }}" == "closed" && "${{ github.event.pull_request.merged }}" == "true" ]]; then
+              PERSIST="true"
+              MERGED="true"
+            elif [[ "${{ github.event.action }}" == "labeled" && "${{ github.event.label.name }}" == "persist-review" ]]; then
+              PERSIST="true"
+            fi
+          elif [[ "${{ github.event_name }}" == "workflow_dispatch" ]]; then
+            PERSIST="true"
+          fi
+          
+          echo "PERSIST_REVIEW=$PERSIST" >> $GITHUB_ENV
+          echo "PR_MERGED=$MERGED" >> $GITHUB_ENV
+          echo "PR_NUMBER=${{ github.event.pull_request.number || github.event.inputs.pr_number }}" >> $GITHUB_ENV
+
+      - name: Run PR Review Script
+        run: bun run systems/toolsmith/scripts/pr-review.ts
+        env:
+          PR_NUMBER: ${{ env.PR_NUMBER }}
+          PR_TITLE: ${{ github.event.pull_request.title }}
+          PR_BODY: ${{ github.event.pull_request.body }}
+          PR_AUTHOR: ${{ github.event.pull_request.user.login }}
+          PR_MERGED: ${{ env.PR_MERGED }}
+          PERSIST_REVIEW: ${{ env.PERSIST_REVIEW }}
+
+      - name: Post PR Comment
+        if: env.PERSIST_REVIEW == 'false'
+        uses: actions/github-script@v7
+        with:
+          github-token: ${{ secrets.GITHUB_TOKEN }}
+          script: |
+            const fs = require('fs');
+            const path = require('path');
+            const reportPath = path.join(process.env.GITHUB_WORKSPACE, 'pr-review-report.md');
+            if (fs.existsSync(reportPath)) {
+              const body = fs.readFileSync(reportPath, 'utf8');
+              github.rest.issues.createComment({
+                issue_number: parseInt(process.env.PR_NUMBER, 10),
+                owner: context.repo.owner,
+                repo: context.repo.repo,
+                body: body
+              });
+            }
+
+      - name: Commit final review logs
+        if: env.PERSIST_REVIEW == 'true'
+        run: |
+          git config user.name "github-actions"
+          git config user.email "github-actions@github.com"
+          git add bench/pr-reviews/ bench/agent-runs/ dashboard/pr-review-queue.md
+          git commit -m "automation: persist PR review log #${{ env.PR_NUMBER }}" || echo "No changes"
+          git push

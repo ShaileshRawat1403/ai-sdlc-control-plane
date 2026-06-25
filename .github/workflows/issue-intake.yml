@@ -1,0 +1,44 @@
+name: Issue Intake
+
+on:
+  issues:
+    types: [opened, edited, labeled]
+
+concurrency:
+  group: issue-intake-${{ github.event.issue.number }}
+  cancel-in-progress: true
+
+permissions:
+  contents: write
+
+jobs:
+  intake:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Setup Bun
+        uses: oven-sh/setup-bun@v1
+        with:
+          bun-version: latest
+
+      - name: Install dependencies
+        run: bun install
+        working-directory: systems/toolsmith
+
+      - name: Run Issue Intake
+        run: bun run systems/toolsmith/scripts/issue-intake.ts
+        env:
+          ISSUE_NUMBER: ${{ github.event.issue.number }}
+          ISSUE_TITLE: ${{ github.event.issue.title }}
+          ISSUE_BODY: ${{ github.event.issue.body }}
+          ISSUE_LABELS: ${{ join(github.event.issue.labels.*.name, ',') }}
+
+      - name: Commit changes
+        run: |
+          git config user.name "github-actions"
+          git config user.email "github-actions@github.com"
+          git add bench/work-items/ state/active-sprint.yml dashboard/sprint-status.md bench/agent-runs/
+          git commit -m "automation: intake issue #${{ github.event.issue.number }}" || echo "No changes"
+          git push

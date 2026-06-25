@@ -1,0 +1,16 @@
+restricted_paths:
+  - ".github/workflows/"
+  - "CONTROL.md"
+  - "AGENTS.md"
+  - "ecosystem.yml"
+  - "state/"
+  - "**/.env"
+  - "**/secrets*"
+  - "**/deploy*"
+  - "**/release*"
+
+requires_human_review:
+  - "brain/decisions/"
+  - "control/rules/"
+  - "control/risk-register/"
+  - "systems/*/status.md"

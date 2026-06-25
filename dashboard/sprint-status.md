@@ -1,25 +1,25 @@
-# Sprint Status Dashboard
+# Sprint Status
 
-Current Sprint: **Sprint 1: Brain + Bench Foundation**
+<!-- brainbench:generated:start -->
 
-## Progress Summary
-- **Start Date**: 2026-06-25
-- **End Date**: 2026-07-02
-- **Completed Tasks**: 4 / 6 (66%)
-- **Blockers**: None
+## Active Sprint: Brain + Bench Foundation
+- **Date Range**: 2026-06-25 to 2026-07-02
+- **Sprint Status**: `active`
 
-## Goals Status
-- [x] Establish V2 directory namespaces and redirection pointer stubs
-- [x] Set up systems status directories with refined roles
-- [/] Provide active context and machine-readable state YAMLs (In progress)
+### Goals
+- Establish V2 directory namespaces and stub redirection files
+- Set up systems status directories with refined roles
+- Provide active context and machine-readable state YAMLs
 
-## Tasks Checklist
+### Sprint Backlog Tasks
+| Task Name | Current Status |
+|---|---|
+| `refactor-dir-structure` | `done` |
+| `system-status-mapping` | `done` |
+| `state-yaml-setup` | `in-progress` |
+| `issue-12` | `intake` |
 
-| Task | System | Status | Owner |
-|---|---|---|---|
-| Refactor directory structure | BrainBench | Done | Agent |
-| Create redirection pointer stubs | BrainBench | Done | Agent |
-| Set up systems directories & status files | BrainBench | Done | Agent |
-| Setup active context & claim registers | BrainBench | Done | Agent |
-| Setup state YAMLs | BrainBench | Done | Agent |
-| Set up templates and dashboards | BrainBench | In Progress | Agent |
+<!-- brainbench:generated:end -->
+
+## Human Notes
+We need to monitor issue-12 closely as it is blocked by Cargo validation. Shailesh will review it.

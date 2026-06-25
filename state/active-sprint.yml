@@ -1,17 +1,19 @@
 sprint:
   id: sprint-1
-  name: "Brain + Bench Foundation"
+  name: Brain + Bench Foundation
   status: active
-  start_date: "2026-06-25"
-  end_date: "2026-07-02"
+  start_date: 2026-06-25
+  end_date: 2026-07-02
   goals:
-    - "Establish V2 directory namespaces and stub redirection files"
-    - "Set up systems status directories with refined roles"
-    - "Provide active context and machine-readable state YAMLs"
+    - Establish V2 directory namespaces and stub redirection files
+    - Set up systems status directories with refined roles
+    - Provide active context and machine-readable state YAMLs
   sprint_backlog:
-    - task: "refactor-dir-structure"
+    - task: refactor-dir-structure
       status: done
-    - task: "system-status-mapping"
+    - task: system-status-mapping
       status: done
-    - task: "state-yaml-setup"
+    - task: state-yaml-setup
       status: in-progress
+    - task: issue-12
+      status: intake

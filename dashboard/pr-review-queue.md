@@ -1,10 +1,14 @@
 # PR Review Queue
 
-Track open Pull Requests, their validation evidence, and review states.
+<!-- brainbench:generated:start -->
 
-## PR Queue
+## Open PR Review Queue
 
-| ID | Repository | Branch | Validation Status | Decision / Review Status | Next Action |
-|---|---|---|---|---|---|
-| - | DAX | `feat/sdlc-verification-harness` | Pending local run | Wait for verification | Run local validation tests |
-| - | Rook | `feat/sdlc-verification-harness` | Pending compile validation | Wait for verification | Compile and check warnings |
+| PR ID | Risk Level | Author | Review Status | Date |
+|---|---|---|---|---|
+| - | - | - | - | - |
+
+<!-- brainbench:generated:end -->
+
+## Human Notes
+[Add manual notes here. These will be preserved by refresh script.]
