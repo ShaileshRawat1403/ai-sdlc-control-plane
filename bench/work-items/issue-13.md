@@ -2,7 +2,7 @@
 type: work-item
 source: github-issue
 issue: 13
-status: ready-for-review
+status: done
 system: tessera
 priority: low
 owner: antigravity

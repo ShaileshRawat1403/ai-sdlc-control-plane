@@ -17,7 +17,8 @@
 | `refactor-dir-structure` | `done` |
 | `system-status-mapping` | `done` |
 | `state-yaml-setup` | `in-progress` |
-| `issue-12` | `intake` |
+| `issue-12` | `ready-for-review` |
+| `issue-13` | `done` |
 
 <!-- brainbench:generated:end -->
 

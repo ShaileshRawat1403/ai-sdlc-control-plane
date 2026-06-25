@@ -4,7 +4,7 @@
 
 ## Operational Brief Summary (2026-06-25)
 - **Report Mode**: `daily`
-- **Sprint Completion**: 2 / 5 tasks (40%)
+- **Sprint Completion**: 3 / 5 tasks (60%)
 - **Active Systems**: BrainBench, DAX, Rook
 
 ### Alerts & Gaps

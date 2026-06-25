@@ -16,6 +16,6 @@ sprint:
     - task: state-yaml-setup
       status: in-progress
     - task: issue-12
-      status: intake
+      status: ready-for-review
     - task: issue-13
-      status: intake
+      status: done
