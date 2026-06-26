@@ -2,7 +2,7 @@
 type: work-item
 source: github-issue
 issue: 12
-status: ready-for-review
+status: done
 system: rook
 priority: high
 owner: Shailesh
