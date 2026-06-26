@@ -1,17 +1,33 @@
-# BrainBench Dashboard Index
+# BrainBench V0.4.3: Visual Command Cockpit
+Generated: 2026-06-25T18:01:38Z
 
 <!-- brainbench:generated:visual-snapshot:start -->
 
 ## Operating Snapshot
 
-| Signal | Value | Status |
-|---|---:|---|
-| Active Systems | 3 | Running |
-| Active Sprint Progress | 5 / 7 | In Progress |
-| Field Trial Progress | 3 / 3 | Complete |
-| Open Evidence Gaps | 1 | Attention |
-| Open Decision Gaps | 0 | Clear |
-| Human Review Items | 1 | Attention |
+> [!NOTE]
+> ### Active Systems: 3
+> Status: `Running`
+
+> [!TIP]
+> ### Active Sprint: 5 / 7
+> Progress: `71%`
+
+> [!TIP]
+> ### Field Trial: 3 / 3
+> Progress: `100%`
+
+> [!WARNING]
+> ### Open Evidence Gaps: 1
+> Status: `Attention`
+
+> [!NOTE]
+> ### Open Decision Gaps: 0
+> Status: `Clear`
+
+> [!WARNING]
+> ### Human Review: 1
+> Action: Review `issue-12`
 
 <!-- brainbench:generated:visual-snapshot:end -->
 
@@ -21,95 +37,35 @@
 
 ```mermaid
 flowchart LR
-  A[Intake] --> B[Triage]
-  B --> C[In Progress]
-  C --> D[PR Review]
-  D --> E[Validation]
-  E --> F[Decision Check]
-  F --> G[Done]
-
-  A --> A1["Open: 0"]
-  D --> D1["PRs: 0"]
-  E --> E1["Evidence Gaps: 1"]
-  F --> F1["Decision Gaps: 0"]
-  G --> G1["Done: 5"]
-
-  A:::active
-  B:::active
-  C:::active
-  D:::clear
-  E:::warning
-  F:::clear
-  G:::done
-
-  A1:::active
-  D1:::clear
-  E1:::warning
-  F1:::clear
-  G1:::done
+  subgraph Execution [Execution]
+    direction LR
+    Intake["Intake: 0"] --> Triage["Triage: 2"] --> InProgress["In Progress: 1"]
+  end
+  subgraph Governance [Governance]
+    direction LR
+    PrReview["PR Review: 0"] --> Evidence["Evidence: 1"] --> Decision["Decision: 0"]
+  end
+  subgraph Closure [Closure]
+    Done["Done: 5"]
+  end
+  InProgress --> PrReview
+  Decision --> Done
 
   classDef active fill:#f5f5f5,stroke:#555,stroke-width:1px;
   classDef clear fill:#eef7ee,stroke:#555,stroke-width:1px;
   classDef warning fill:#fff3cd,stroke:#555,stroke-width:1px;
   classDef done fill:#e8f0fe,stroke:#555,stroke-width:1px;
+
+  Intake:::active
+  Triage:::active
+  InProgress:::active
+  PrReview:::clear
+  Evidence:::warning
+  Decision:::clear
+  Done:::done
 ```
 
 <!-- brainbench:generated:visual-sdlc-flow:end -->
-
-<!-- brainbench:generated:visual-quality-gates:start -->
-
-## Quality Gates
-
-| Gate | Open | Status | Action |
-|---|---:|---|---|
-| PR Review | 0 | Clear | None |
-| Evidence Gaps | 1 | Attention | Link required PR numbers to tasks |
-| Decision Gaps | 0 | Clear | None |
-| Human Review | 1 | Attention | Review issue-12 |
-
-<!-- brainbench:generated:visual-quality-gates:end -->
-
-<!-- brainbench:generated:visual-system-health:start -->
-
-## System Health
-
-| System | State | Current Focus | Risk | Evidence |
-|---|---|---|---|---|
-| **BrainBench** | Active | Dashboard clarity | Low | Complete |
-| **DAX** | Active | Verification harness | Low | Complete |
-| **Rook** | Active | Verification harness | Low | Complete |
-| **Soothsayer** | Paused | Governance catalog | Clear | Complete |
-| **Flowright** | Paused | Product-fit map | Clear | Complete |
-| **ToolSmith** | Paused | Utility roadmap | Clear | Complete |
-| **Tessera** | Paused | Repo-to-use-case | Clear | Complete |
-| **Picobot** | Unmapped | Ingress bridge | Clear | Complete |
-| **PruningMyPothos** | Unmapped | Documentation surface | Clear | Complete |
-
-<!-- brainbench:generated:visual-system-health:end -->
-
-<!-- brainbench:generated:visual-human-review:start -->
-
-## Needs Human Review
-
-| Item | Reason | Suggested Action |
-|---|---|---|
-| issue-12 | Backlog item still pending review | Confirm owner / close / move to next sprint |
-
-<!-- brainbench:generated:visual-human-review:end -->
-
-<!-- brainbench:generated:visual-agent-advisory:start -->
-
-## Agent Advisory Signals
-
-| Agent | Repo/System | Signal | Confidence | Operator Action |
-|---|---|---|---|---|
-| Triage Agent | toolsmith | Default low priority assignment. Warning: has unassigned owner, unassigned priority. | `low` | Review roadmap boundary |
-| Triage Agent | rook | Touches active core SDLC verification system: rook. | `high` | Review triage suggestions |
-| Evidence Agent | rook | Work item is in status `ready-for-review` but has no mapped PR number in its frontmatter. | High | Link PRs to backlog tasks |
-| Decision Gap Agent | BrainBench | No open decision gaps | High | No action |
-| Weekly Brief | Sprint | 5 / 7 complete | High | Review #12 |
-
-<!-- brainbench:generated:visual-agent-advisory:end -->
 
 <!-- brainbench:generated:repo-insight-matrix:start -->
 
@@ -120,12 +76,7 @@ flowchart LR
 | **BrainBench** | No active work | Low | Complete | Clear | Dashboard clarity trial active | Operate from cockpit |
 | **DAX** | No active work | Low | Complete | Clear | Verification harness active | Run local validation:
 
-```bash
-bun run typecheck:dax
-bun run test
-dax sdlc verify --format json
-dax sdlc verify --native --format json --receipts
-``` |
+<kbd>bun run typecheck:dax</kbd> · <kbd>bun run test</kbd> · <kbd>dax sdlc verify --format json</kbd> · <kbd>dax sdlc verify --native --format json --receipts</kbd> |
 | **Rook** (Issue #12) | Review | Medium | Unknown | Clear | Needs human review | Confirm close / carry forward |
 | **Soothsayer** | No active work | Low | Complete | Clear | No active implementation. | Do not modify until the DAX/Rook SDLC verification slice stabilizes. |
 | **Flowright** | Done | Low | Complete | Clear | Wait for DAX/Rook SDLC core verification loops to stabilize before wiring kernel orchestration. | Review product positioning |
@@ -135,100 +86,6 @@ dax sdlc verify --native --format json --receipts
 | **PruningMyPothos** | No active work | Low | Complete | Clear | Confirm the exact repository name and owner. | Map the repository in `ecosystem.yml` once confirmed. |
 
 <!-- brainbench:generated:repo-insight-matrix:end -->
-
-<!-- brainbench:generated:repo-action-lanes:start -->
-
-## Repo Action Lanes
-
-### BrainBench
-
-| Signal | Status | Action |
-|---|---|---|
-| Objective: Establish V2 structure containing Brain, Bench, Control, Dashboard, Memory, State, and Systems. | Active | Complete Phase 1 refactor verification and publish dogfooding logs. |
-| Freshness | Unknown | No action |
-| Evidence | Complete | No action |
-| Decision gaps | Clear | No action |
-
-### DAX
-
-| Signal | Status | Action |
-|---|---|---|
-| Objective: Add the first SDLC verification harness that treats tests, CI checks, and command outputs as structured evidence. | Active | Run local validation:
-
-```bash
-bun run typecheck:dax
-bun run test
-dax sdlc verify --format json
-dax sdlc verify --native --format json --receipts
-``` |
-| Freshness | Unknown | No action |
-| Evidence | Complete | No action |
-| Decision gaps | Clear | No action |
-
-### Rook
-
-| Signal | Status | Action |
-|---|---|---|
-| Add Rook verify command (Refined) | Review | Confirm close / move to next sprint |
-| Freshness | Unknown | No action |
-| Evidence | Complete | No action |
-| Decision gaps | Clear | No action |
-
-### Soothsayer
-
-| Signal | Status | Action |
-|---|---|---|
-| Objective: No active implementation. | Paused | Do not modify until the DAX/Rook SDLC verification slice stabilizes. |
-| Freshness | Unknown | No action |
-| Evidence | Complete | No action |
-| Decision gaps | Clear | No action |
-
-### Flowright
-
-| Signal | Status | Action |
-|---|---|---|
-| [Flowright] Define use-case and product-fit map | Complete | Review product-fit assumptions |
-| Freshness | Unknown | No action |
-| Evidence | Complete | No action |
-| Decision gaps | Clear | No action |
-
-### ToolSmith
-
-| Signal | Status | Action |
-|---|---|---|
-| [ToolSmith] Define utility roadmap and repo-helper scope | Complete | Select first repo-helper utility |
-| Freshness | Unknown | No action |
-| Evidence | Complete | No action |
-| Decision gaps | Clear | No action |
-
-### Tessera
-
-| Signal | Status | Action |
-|---|---|---|
-| [Tessera] Define repo-to-use-case utility | Complete | Convert into build issue |
-| Freshness | Unknown | No action |
-| Evidence | Complete | No action |
-| Decision gaps | Clear | No action |
-
-### Picobot
-
-| Signal | Status | Action |
-|---|---|---|
-| Objective: Confirm the exact repository name and owner. | Unmapped | Map the repository in `ecosystem.yml` once confirmed. |
-| Freshness | Unknown | No action |
-| Evidence | Complete | No action |
-| Decision gaps | Clear | No action |
-
-### PruningMyPothos
-
-| Signal | Status | Action |
-|---|---|---|
-| Objective: Confirm the exact repository name and owner. | Unmapped | Map the repository in `ecosystem.yml` once confirmed. |
-| Freshness | Unknown | No action |
-| Evidence | Complete | No action |
-| Decision gaps | Clear | No action |
-
-<!-- brainbench:generated:repo-action-lanes:end -->
 
 <!-- brainbench:generated:quality-gates-by-repo:start -->
 
@@ -247,6 +104,146 @@ dax sdlc verify --native --format json --receipts
 | **PruningMyPothos** | Clear | Clear | Clear | None | Healthy |
 
 <!-- brainbench:generated:quality-gates-by-repo:end -->
+
+<!-- brainbench:generated:visual-human-review:start -->
+
+## Needs Human Review
+
+| Item | Reason | Suggested Action |
+|---|---|---|
+| issue-12 | Backlog item still pending review | Confirm owner / close / move to next sprint |
+
+<!-- brainbench:generated:visual-human-review:end -->
+
+<!-- brainbench:generated:repo-action-lanes:start -->
+
+## Repo Action Lanes
+
+<details>
+<summary><b>BrainBench</b> — No active work · Low · Evidence Complete</summary>
+
+| Signal | Status | Action |
+|---|---|---|
+| Objective: Establish V2 structure containing Brain, Bench, Control, Dashboard, Memory, State, and Systems. | Active | Complete Phase 1 refactor verification and publish dogfooding logs. |
+| Freshness | Unknown | No action |
+| Evidence | Complete | No action |
+| Decision gaps | Clear | No action |
+
+</details>
+
+<details>
+<summary><b>DAX</b> — No active work · Low · Evidence Complete</summary>
+
+| Signal | Status | Action |
+|---|---|---|
+| Objective: Add the first SDLC verification harness that treats tests, CI checks, and command outputs as structured evidence. | Active | Run local validation:
+
+<kbd>bun run typecheck:dax</kbd> · <kbd>bun run test</kbd> · <kbd>dax sdlc verify --format json</kbd> · <kbd>dax sdlc verify --native --format json --receipts</kbd> |
+| Freshness | Unknown | No action |
+| Evidence | Complete | No action |
+| Decision gaps | Clear | No action |
+
+</details>
+
+<details>
+<summary><b>Rook</b> — Review · Medium · Evidence Unknown</summary>
+
+| Signal | Status | Action |
+|---|---|---|
+| Add Rook verify command (Refined) | Review | Confirm close / move to next sprint |
+| Freshness | Unknown | No action |
+| Evidence | Complete | No action |
+| Decision gaps | Clear | No action |
+
+</details>
+
+<details>
+<summary><b>Soothsayer</b> — No active work · Low · Evidence Complete</summary>
+
+| Signal | Status | Action |
+|---|---|---|
+| Objective: No active implementation. | Paused | Do not modify until the DAX/Rook SDLC verification slice stabilizes. |
+| Freshness | Unknown | No action |
+| Evidence | Complete | No action |
+| Decision gaps | Clear | No action |
+
+</details>
+
+<details>
+<summary><b>Flowright</b> — Done · Low · Evidence Complete</summary>
+
+| Signal | Status | Action |
+|---|---|---|
+| [Flowright] Define use-case and product-fit map | Complete | Review product-fit assumptions |
+| Freshness | Unknown | No action |
+| Evidence | Complete | No action |
+| Decision gaps | Clear | No action |
+
+</details>
+
+<details>
+<summary><b>ToolSmith</b> — Done · Low · Evidence Complete</summary>
+
+| Signal | Status | Action |
+|---|---|---|
+| [ToolSmith] Define utility roadmap and repo-helper scope | Complete | Select first repo-helper utility |
+| Freshness | Unknown | No action |
+| Evidence | Complete | No action |
+| Decision gaps | Clear | No action |
+
+</details>
+
+<details>
+<summary><b>Tessera</b> — Done · Low · Evidence Complete</summary>
+
+| Signal | Status | Action |
+|---|---|---|
+| [Tessera] Define repo-to-use-case utility | Complete | Convert into build issue |
+| Freshness | Unknown | No action |
+| Evidence | Complete | No action |
+| Decision gaps | Clear | No action |
+
+</details>
+
+<details>
+<summary><b>Picobot</b> — No active work · Low · Evidence Complete</summary>
+
+| Signal | Status | Action |
+|---|---|---|
+| Objective: Confirm the exact repository name and owner. | Unmapped | Map the repository in `ecosystem.yml` once confirmed. |
+| Freshness | Unknown | No action |
+| Evidence | Complete | No action |
+| Decision gaps | Clear | No action |
+
+</details>
+
+<details>
+<summary><b>PruningMyPothos</b> — No active work · Low · Evidence Complete</summary>
+
+| Signal | Status | Action |
+|---|---|---|
+| Objective: Confirm the exact repository name and owner. | Unmapped | Map the repository in `ecosystem.yml` once confirmed. |
+| Freshness | Unknown | No action |
+| Evidence | Complete | No action |
+| Decision gaps | Clear | No action |
+
+</details>
+
+<!-- brainbench:generated:repo-action-lanes:end -->
+
+<!-- brainbench:generated:visual-agent-advisory:start -->
+
+## Agent Advisory Signals
+
+| Agent | Repo/System | Signal | Confidence | Operator Action |
+|---|---|---|---|---|
+| Triage Agent | toolsmith | Default low priority assignment. Warning: has unassigned owner, unassigned priority. | `low` | Review roadmap boundary |
+| Triage Agent | rook | Touches active core SDLC verification system: rook. | `high` | Review triage suggestions |
+| Evidence Agent | rook | Work item is in status `ready-for-review` but has no mapped PR number in its frontmatter. | High | Link PRs to backlog tasks |
+| Decision Gap Agent | BrainBench | No open decision gaps | High | No action |
+| Weekly Brief | Sprint | 5 / 7 complete | High | Review #12 |
+
+<!-- brainbench:generated:visual-agent-advisory:end -->
 
 <!-- brainbench:generated:repo-recommended-actions:start -->
 
@@ -295,12 +292,14 @@ dax sdlc verify --native --format json --receipts
 
 <!-- brainbench:generated:repo-recommended-actions:end -->
 
+## Latest Operator Briefs
+- [Daily Pulse (Operations)](file:///Users/ananyalayek/.gemini/antigravity/scratch/brainbench/dashboard/daily-report.md)
+- [Weekly Review (Trends)](file:///Users/ananyalayek/.gemini/antigravity/scratch/brainbench/dashboard/weekly-report.md)
+
 ## Operator Notes
 
 <!-- brainbench:manual:operator-notes:start -->
-
 Use this section for human observations during dashboard clarity trials.
-
 <!-- brainbench:manual:operator-notes:end -->
 
 ## Human Notes

@@ -251,122 +251,109 @@ let weeklyReportContent = `## Weekly Operating Metrics
 `;
 updateGeneratedSection(path.join(DASHBOARD_DIR, 'weekly-report.md'), weeklyReportContent, 'Weekly Report');
 
-// Helper to update specific blocks in dashboard/index.md
-function updateNamedSection(filePath: string, blockName: string, generatedContent: string) {
-  const startMarker = `<!-- brainbench:generated:${blockName}:start -->`;
-  const endMarker = `<!-- brainbench:generated:${blockName}:end -->`;
+// Helper to extract backtick command codes or code blocks and render them as <kbd> tags
+function formatCommands(text: string): string {
+  if (!text) return '';
+  
+  // 1. Replace multiline code blocks (e.g. ```bash\nbun run test\n```)
+  let formatted = text.replace(/```(?:bash|sh|json)?\n([\s\S]*?)\n```/g, (match, code) => {
+    const lines = code.split('\n').map((line: string) => line.trim()).filter(Boolean);
+    return lines.map((line: string) => `<kbd>${line}</kbd>`).join(' · ');
+  });
 
-  let content = '';
-  if (fs.existsSync(filePath)) {
-    content = fs.readFileSync(filePath, 'utf-8');
-  } else {
-    // create default skeleton
-    content = `# BrainBench Dashboard Cockpit\n\n` +
-      `<!-- brainbench:generated:visual-snapshot:start -->\n<!-- brainbench:generated:visual-snapshot:end -->\n\n` +
-      `<!-- brainbench:generated:visual-sdlc-flow:start -->\n<!-- brainbench:generated:visual-sdlc-flow:end -->\n\n` +
-      `<!-- brainbench:generated:repo-insight-matrix:start -->\n<!-- brainbench:generated:repo-insight-matrix:end -->\n\n` +
-      `<!-- brainbench:generated:repo-action-lanes:start -->\n<!-- brainbench:generated:repo-action-lanes:end -->\n\n` +
-      `<!-- brainbench:generated:quality-gates-by-repo:start -->\n<!-- brainbench:generated:quality-gates-by-repo:end -->\n\n` +
-      `<!-- brainbench:generated:visual-human-review:start -->\n<!-- brainbench:generated:visual-human-review:end -->\n\n` +
-      `<!-- brainbench:generated:visual-agent-advisory:start -->\n<!-- brainbench:generated:visual-agent-advisory:end -->\n\n` +
-      `<!-- brainbench:generated:repo-recommended-actions:start -->\n<!-- brainbench:generated:repo-recommended-actions:end -->\n\n` +
-      `## Latest Operator Briefs\n` +
-      `- [Daily Pulse (Operations)](file://${path.join(DASHBOARD_DIR, 'daily-report.md')})\n` +
-      `- [Weekly Review (Trends)](file://${path.join(DASHBOARD_DIR, 'weekly-report.md')})\n\n` +
-      `## Operator Notes\n\n<!-- brainbench:manual:operator-notes:start -->\n\nUse this section for human observations during dashboard clarity trials.\n\n<!-- brainbench:manual:operator-notes:end -->\n\n` +
-      `## Human Notes\n[Add manual notes here. These will be preserved by refresh script.]\n`;
-  }
-
-  const startIndex = content.indexOf(startMarker);
-  const endIndex = content.indexOf(endMarker);
-
-  if (startIndex === -1 || endIndex === -1 || startIndex >= endIndex) {
-    const humanNotesIndex = content.indexOf('## Human Notes');
-    if (humanNotesIndex !== -1) {
-      content = content.slice(0, humanNotesIndex) +
-                `${startMarker}\n\n${generatedContent.trim()}\n\n${endMarker}\n\n` +
-                content.slice(humanNotesIndex);
-    } else {
-      content = content.trim() + `\n\n${startMarker}\n\n${generatedContent.trim()}\n\n${endMarker}\n`;
+  // 2. Replace inline backtick codes (e.g. `bun run test`)
+  formatted = formatted.replace(/`([^`]+)`/g, (match, code) => {
+    const trimmed = code.trim();
+    // Check if it looks like a command, script, path to script, or an action command
+    const isCmd = /^(bun|npm|npx|git|dax|node|bunx|python|bash|sh|make)\b|[\w.-]+\.(ts|js|sh|py)\b/.test(trimmed);
+    if (isCmd) {
+      return `<kbd>${trimmed}</kbd>`;
     }
-  } else {
-    content = content.slice(0, startIndex + startMarker.length) +
-              '\n\n' + generatedContent.trim() + '\n\n' +
-              content.slice(endIndex);
+    return `\`${trimmed}\``;
+  });
+
+  return formatted;
+}
+
+// Function to compile the entire cockpit dashboard/index.md in the correct order
+function compileIndexFile(
+  filePath: string,
+  sections: {
+    visualSnapshot: string,
+    visualSdlcFlow: string,
+    repoInsightMatrix: string,
+    qualityGatesContent: string,
+    visualHumanReview: string,
+    repoActionLanes: string,
+    visualAgentAdvisory: string,
+    repoRecommendedActions: string
   }
+) {
+  let operatorNotesContent = '\nUse this section for human observations during dashboard clarity trials.\n';
+  let humanNotesContent = '\n[Add manual notes here. These will be preserved by refresh script.]\n';
+
+  if (fs.existsSync(filePath)) {
+    const fileContent = fs.readFileSync(filePath, 'utf-8');
+    
+    // Extract operator notes
+    const opStartMarker = '<!-- brainbench:manual:operator-notes:start -->';
+    const opEndMarker = '<!-- brainbench:manual:operator-notes:end -->';
+    const opStartIdx = fileContent.indexOf(opStartMarker);
+    const opEndIdx = fileContent.indexOf(opEndMarker);
+    if (opStartIdx !== -1 && opEndIdx !== -1 && opStartIdx < opEndIdx) {
+      operatorNotesContent = fileContent.slice(opStartIdx + opStartMarker.length, opEndIdx);
+    }
+
+    // Extract human notes
+    const hnMarker = '## Human Notes';
+    const hnIdx = fileContent.indexOf(hnMarker);
+    if (hnIdx !== -1) {
+      humanNotesContent = fileContent.slice(hnIdx + hnMarker.length);
+    }
+  }
+
+  // Trim whitespace around extracted manual content
+  operatorNotesContent = operatorNotesContent.trim();
+  if (operatorNotesContent) {
+    operatorNotesContent = '\n' + operatorNotesContent + '\n';
+  } else {
+    operatorNotesContent = '\nUse this section for human observations during dashboard clarity trials.\n';
+  }
+  
+  humanNotesContent = humanNotesContent.trim();
+  if (humanNotesContent) {
+    humanNotesContent = '\n' + humanNotesContent + '\n';
+  } else {
+    humanNotesContent = '\n[Add manual notes here. These will be preserved by refresh script.]\n';
+  }
+
+  const generatedTimestamp = new Date().toISOString().replace(/\.\d+Z$/, 'Z');
+
+  const content = `# BrainBench V0.4.3: Visual Command Cockpit\n` +
+    `Generated: ${generatedTimestamp}\n\n` +
+    `<!-- brainbench:generated:visual-snapshot:start -->\n\n${sections.visualSnapshot.trim()}\n\n<!-- brainbench:generated:visual-snapshot:end -->\n\n` +
+    `<!-- brainbench:generated:visual-sdlc-flow:start -->\n\n${sections.visualSdlcFlow.trim()}\n\n<!-- brainbench:generated:visual-sdlc-flow:end -->\n\n` +
+    `<!-- brainbench:generated:repo-insight-matrix:start -->\n\n${sections.repoInsightMatrix.trim()}\n\n<!-- brainbench:generated:repo-insight-matrix:end -->\n\n` +
+    `<!-- brainbench:generated:quality-gates-by-repo:start -->\n\n${sections.qualityGatesContent.trim()}\n\n<!-- brainbench:generated:quality-gates-by-repo:end -->\n\n` +
+    `<!-- brainbench:generated:visual-human-review:start -->\n\n${sections.visualHumanReview.trim()}\n\n<!-- brainbench:generated:visual-human-review:end -->\n\n` +
+    `<!-- brainbench:generated:repo-action-lanes:start -->\n\n${sections.repoActionLanes.trim()}\n\n<!-- brainbench:generated:repo-action-lanes:end -->\n\n` +
+    `<!-- brainbench:generated:visual-agent-advisory:start -->\n\n${sections.visualAgentAdvisory.trim()}\n\n<!-- brainbench:generated:visual-agent-advisory:end -->\n\n` +
+    `<!-- brainbench:generated:repo-recommended-actions:start -->\n\n${sections.repoRecommendedActions.trim()}\n\n<!-- brainbench:generated:repo-recommended-actions:end -->\n\n` +
+    `## Latest Operator Briefs\n` +
+    `- [Daily Pulse (Operations)](file://${path.join(DASHBOARD_DIR, 'daily-report.md')})\n` +
+    `- [Weekly Review (Trends)](file://${path.join(DASHBOARD_DIR, 'weekly-report.md')})\n\n` +
+    `## Operator Notes\n\n<!-- brainbench:manual:operator-notes:start -->${operatorNotesContent}<!-- brainbench:manual:operator-notes:end -->\n\n` +
+    `## Human Notes${humanNotesContent}`;
 
   if (!dryRun) {
     fs.writeFileSync(filePath, content, 'utf-8');
-    console.log(`[Dashboard Refresh] Updated block ${blockName} in ${filePath}`);
+    console.log(`[Dashboard Refresh] Successfully updated cockpit at ${filePath}`);
   } else {
-    console.log(`[DRY RUN] Would write block ${blockName} to ${filePath}`);
+    console.log(`[DRY RUN] Would write cockpit to ${filePath}:\n${content}`);
   }
 }
 
-// 7. Migrate old index.md generated section if present
 const indexPath = path.join(DASHBOARD_DIR, 'index.md');
-if (fs.existsSync(indexPath)) {
-  let content = fs.readFileSync(indexPath, 'utf-8');
-  
-  // Remove old single-marker if it's there
-  if (content.includes('<!-- brainbench:generated:start -->')) {
-    const startIdx = content.indexOf('<!-- brainbench:generated:start -->');
-    const endIdx = content.indexOf('<!-- brainbench:generated:end -->');
-    if (startIdx !== -1 && endIdx !== -1 && startIdx < endIdx) {
-      content = content.slice(0, startIdx) + content.slice(endIdx + '<!-- brainbench:generated:end -->'.length);
-    }
-  }
-
-  // Ensure all the new V0.4.2 block markers exist in the file
-  const requiredBlocks = [
-    'visual-snapshot',
-    'visual-sdlc-flow',
-    'repo-insight-matrix',
-    'repo-action-lanes',
-    'quality-gates-by-repo',
-    'visual-human-review',
-    'visual-agent-advisory',
-    'repo-recommended-actions'
-  ];
-
-  let modified = false;
-  for (const block of requiredBlocks) {
-    const startMarker = `<!-- brainbench:generated:${block}:start -->`;
-    const endMarker = `<!-- brainbench:generated:${block}:end -->`;
-    if (!content.includes(startMarker) || !content.includes(endMarker)) {
-      const insertIndex = content.indexOf('## Latest Operator Briefs') !== -1 
-        ? content.indexOf('## Latest Operator Briefs') 
-        : (content.indexOf('## Operator Notes') !== -1 
-           ? content.indexOf('## Operator Notes') 
-           : content.indexOf('## Human Notes'));
-      
-      const newBlockStr = `${startMarker}\n${endMarker}\n\n`;
-      if (insertIndex !== -1) {
-        content = content.slice(0, insertIndex) + newBlockStr + content.slice(insertIndex);
-      } else {
-        content = content.trim() + `\n\n${newBlockStr}`;
-      }
-      modified = true;
-    }
-  }
-
-  // Ensure "## Operator Notes" block exists
-  if (!content.includes('## Operator Notes')) {
-    const insertIndex = content.indexOf('## Human Notes');
-    const opNotesStr = `## Operator Notes\n\n<!-- brainbench:manual:operator-notes:start -->\n\nUse this section for human observations during dashboard clarity trials.\n\n<!-- brainbench:manual:operator-notes:end -->\n\n`;
-    if (insertIndex !== -1) {
-      content = content.slice(0, insertIndex) + opNotesStr + content.slice(insertIndex);
-    } else {
-      content = content.trim() + `\n\n${opNotesStr}`;
-    }
-    modified = true;
-  }
-
-  if (modified && !dryRun) {
-    fs.writeFileSync(indexPath, content, 'utf-8');
-    console.log(`[Dashboard Refresh] Migrated index.md to include all visual cockpit blocks.`);
-  }
-}
 
 // Helper to parse systems status.md files
 function parseSystemStatusFile(sysId: string, ecosystemSys: any): any {
@@ -627,58 +614,78 @@ const evidenceGapsSignal = evidenceGapsCount > 0 ? 'Attention' : 'Clear';
 const decisionGapsSignal = decisionGapsCount > 0 ? 'Attention' : 'Clear';
 const needsHumanReviewSignal = needsReviewTasks.length > 0 ? 'Attention' : 'Clear';
 
-const visualSnapshot = `## Operating Snapshot
+const snapshotCards: string[] = [];
 
-| Signal | Value | Status |
-|---|---:|---|
-| Active Systems | ${activeSystemsCount} | Running |
-| Active Sprint Progress | ${completedTasks} / ${totalTasks} | ${sprintSignal} |
-| Field Trial Progress | ${completedFieldTrialTasks} / ${totalFieldTrialTasks} | ${fieldTrialSignal} |
-| Open Evidence Gaps | ${evidenceGapsCount} | ${evidenceGapsSignal} |
-| Open Decision Gaps | ${decisionGapsCount} | ${decisionGapsSignal} |
-| Human Review Items | ${needsReviewTasks.length} | ${needsHumanReviewSignal} |`;
+// 1. Active Systems
+snapshotCards.push(`> [!NOTE]
+> ### Active Systems: ${activeSystemsCount}
+> Status: \`Running\``);
 
-updateNamedSection(indexPath, 'visual-snapshot', visualSnapshot);
+// 2. Active Sprint
+snapshotCards.push(`> [!TIP]
+> ### Active Sprint: ${completedTasks} / ${totalTasks}
+> Progress: \`${completionPercentage}%\``);
+
+// 3. Field Trial
+snapshotCards.push(`> [!TIP]
+> ### Field Trial: ${completedFieldTrialTasks} / ${totalFieldTrialTasks}
+> Progress: \`${fieldTrialPercentage}%\``);
+
+// 4. Open Evidence Gaps
+const evidenceGapsCardType = evidenceGapsCount > 0 ? 'WARNING' : 'NOTE';
+snapshotCards.push(`> [!${evidenceGapsCardType}]
+> ### Open Evidence Gaps: ${evidenceGapsCount}
+> Status: \`${evidenceGapsSignal}\``);
+
+// 5. Open Decision Gaps
+const decisionGapsCardType = decisionGapsCount > 0 ? 'WARNING' : 'NOTE';
+snapshotCards.push(`> [!${decisionGapsCardType}]
+> ### Open Decision Gaps: ${decisionGapsCount}
+> Status: \`${decisionGapsSignal}\``);
+
+// 6. Human Review Queue
+const humanReviewCardType = needsReviewTasks.length > 0 ? 'WARNING' : 'NOTE';
+const humanReviewAction = needsReviewTasks.length > 0 
+  ? `Action: Review ${needsReviewTasks.map(t => `\`${t.task}\``).join(', ')}`
+  : `Status: \`Clear\``;
+snapshotCards.push(`> [!${humanReviewCardType}]
+> ### Human Review: ${needsReviewTasks.length}
+> ${humanReviewAction}`);
+
+const visualSnapshot = `## Operating Snapshot\n\n` + snapshotCards.join('\n\n');
 
 // 2. Visual SDLC Pipeline Flowchart
 const visualSdlcFlow = `## Visual SDLC Pipeline
 
 \`\`\`mermaid
 flowchart LR
-  A[Intake] --> B[Triage]
-  B --> C[In Progress]
-  C --> D[PR Review]
-  D --> E[Validation]
-  E --> F[Decision Check]
-  F --> G[Done]
-
-  A --> A1["Open: ${intakeCount}"]
-  D --> D1["PRs: ${prQueueCount}"]
-  E --> E1["Evidence Gaps: ${evidenceGapsCount}"]
-  F --> F1["Decision Gaps: ${decisionGapsCount}"]
-  G --> G1["Done: ${doneCount}"]
-
-  A:::active
-  B:::active
-  C:::active
-  D:::${prQueueCount > 0 ? 'warning' : 'clear'}
-  E:::${evidenceGapsCount > 0 ? 'warning' : 'clear'}
-  F:::${decisionGapsCount > 0 ? 'warning' : 'clear'}
-  G:::done
-
-  A1:::active
-  D1:::${prQueueCount > 0 ? 'warning' : 'clear'}
-  E1:::${evidenceGapsCount > 0 ? 'warning' : 'clear'}
-  F1:::${decisionGapsCount > 0 ? 'warning' : 'clear'}
-  G1:::done
+  subgraph Execution [Execution]
+    direction LR
+    Intake["Intake: ${intakeCount}"] --> Triage["Triage: ${triageCount}"] --> InProgress["In Progress: ${inProgressCount}"]
+  end
+  subgraph Governance [Governance]
+    direction LR
+    PrReview["PR Review: ${prQueueCount}"] --> Evidence["Evidence: ${evidenceGapsCount}"] --> Decision["Decision: ${decisionGapsCount}"]
+  end
+  subgraph Closure [Closure]
+    Done["Done: ${doneCount}"]
+  end
+  InProgress --> PrReview
+  Decision --> Done
 
   classDef active fill:#f5f5f5,stroke:#555,stroke-width:1px;
   classDef clear fill:#eef7ee,stroke:#555,stroke-width:1px;
   classDef warning fill:#fff3cd,stroke:#555,stroke-width:1px;
   classDef done fill:#e8f0fe,stroke:#555,stroke-width:1px;
-\`\`\``;
 
-updateNamedSection(indexPath, 'visual-sdlc-flow', visualSdlcFlow);
+  Intake:::active
+  Triage:::active
+  InProgress:::active
+  PrReview:::${prQueueCount > 0 ? 'warning' : 'clear'}
+  Evidence:::${evidenceGapsCount > 0 ? 'warning' : 'clear'}
+  Decision:::${decisionGapsCount > 0 ? 'warning' : 'clear'}
+  Done:::done
+\`\`\``;
 
 // Helpers for repo health & risk mapping
 function getSystemRisk(sysId: string, sys: any, openPrs: any[], systemWorkItems: any[], hasEvidenceGaps: boolean, hasDecisionGaps: boolean): string {
@@ -817,10 +824,8 @@ for (const id in systemsInsights) {
     displayName = `**${name}** (${reviewTasks.map((t: any) => 'Issue #' + t.issue).join(', ')})`;
   }
   
-  repoInsightMatrix += `| ${displayName} | ${workState} | ${risk} | ${evidence} | ${decision} | ${advisory} | ${nextAction} |\n`;
+  repoInsightMatrix += `| ${displayName} | ${workState} | ${risk} | ${evidence} | ${decision} | ${formatCommands(advisory)} | ${formatCommands(nextAction)} |\n`;
 }
-
-updateNamedSection(indexPath, 'repo-insight-matrix', repoInsightMatrix);
 
 // 4. Generate Repo-Specific Action Lanes
 let repoActionLanes = `## Repo Action Lanes
@@ -829,8 +834,32 @@ let repoActionLanes = `## Repo Action Lanes
 for (const id in systemsInsights) {
   const insight = systemsInsights[id];
   const name = insight.statusInfo.name;
+
+  let workState = 'Idle';
+  const hasInProgress = insight.workItems.some((t: any) => t.status === 'in-progress');
+  const hasReview = insight.workItems.some((t: any) => t.status === 'ready-for-review');
+  const hasDone = insight.workItems.length > 0 && insight.workItems.every((t: any) => t.status === 'done');
   
-  repoActionLanes += `### ${name}\n\n`;
+  if (hasReview) {
+    workState = 'Review';
+  } else if (hasInProgress) {
+    workState = 'Active';
+  } else if (hasDone) {
+    workState = 'Done';
+  } else if (insight.statusInfo.status === 'paused') {
+    workState = 'Paused';
+  } else if (insight.statusInfo.status === 'unmapped') {
+    workState = 'Unmapped';
+  } else if (insight.workItems.length === 0) {
+    workState = 'No active work';
+  }
+
+  const risk = getSystemRisk(id, insight.statusInfo, openPrsList.filter(pr => pr.status !== 'merged'), insight.workItems, insight.hasEvidenceGaps, insight.hasDecisionGaps);
+  const evidence = getSystemEvidence(id, insight.statusInfo, evidenceGapsList, insight.workItems, evidenceIndexList);
+  const evidenceStr = evidence === 'Complete' ? 'Evidence Complete' : (evidence === 'Gaps Found' ? 'Evidence Gaps' : 'Evidence Unknown');
+
+  repoActionLanes += `<details>\n`;
+  repoActionLanes += `<summary><b>${name}</b> — ${workState} · ${risk} · ${evidenceStr}</summary>\n\n`;
   repoActionLanes += `| Signal | Status | Action |\n`;
   repoActionLanes += `|---|---|---|\n`;
   
@@ -851,38 +880,36 @@ for (const id in systemsInsights) {
         taskStatus = 'Active';
         taskAction = 'Continue sprint backlog tasks';
       }
-      repoActionLanes += `| ${task.title} | ${taskStatus} | ${taskAction} |\n`;
+      repoActionLanes += `| ${task.title} | ${taskStatus} | ${formatCommands(taskAction)} |\n`;
     }
   } else {
     const statusCap = insight.statusInfo.status.charAt(0).toUpperCase() + insight.statusInfo.status.slice(1);
-    repoActionLanes += `| Objective: ${insight.statusInfo.objective} | ${statusCap} | ${insight.statusInfo.next_action} |\n`;
+    repoActionLanes += `| Objective: ${insight.statusInfo.objective} | ${statusCap} | ${formatCommands(insight.statusInfo.next_action)} |\n`;
   }
   
   const freshnessCap = insight.statusInfo.freshness.replace('Freshness: ', '').charAt(0).toUpperCase() + insight.statusInfo.freshness.replace('Freshness: ', '').slice(1);
   const freshnessAction = freshnessCap === 'Stale' ? 'Update status.md file' : 'No action';
-  repoActionLanes += `| Freshness | ${freshnessCap} | ${freshnessAction} |\n`;
+  repoActionLanes += `| Freshness | ${freshnessCap} | ${formatCommands(freshnessAction)} |\n`;
   
   const hasGaps = insight.hasEvidenceGaps;
   const evidenceStatus = hasGaps ? 'Attention' : 'Complete';
   const evidenceAction = hasGaps ? 'Link required PR numbers to tasks' : 'No action';
-  repoActionLanes += `| Evidence | ${evidenceStatus} | ${evidenceAction} |\n`;
+  repoActionLanes += `| Evidence | ${evidenceStatus} | ${formatCommands(evidenceAction)} |\n`;
   
   const hasDecGaps = insight.hasDecisionGaps;
   const decStatus = hasDecGaps ? 'Attention' : 'Clear';
   const decAction = hasDecGaps ? 'Review candidate decision drafts' : 'No action';
-  repoActionLanes += `| Decision gaps | ${decStatus} | ${decAction} |\n`;
+  repoActionLanes += `| Decision gaps | ${decStatus} | ${formatCommands(decAction)} |\n`;
   
   if (insight.statusInfo.status === 'paused' || insight.statusInfo.status === 'unmapped') {
     let nextCandidateAction = 'Define input/output contract';
     if (id === 'flowright') nextCandidateAction = 'Create use-case prioritization note';
     else if (id === 'toolsmith') nextCandidateAction = 'Define utility backlog';
-    repoActionLanes += `| Next candidate | Open | ${nextCandidateAction} |\n`;
+    repoActionLanes += `| Next candidate | Open | ${formatCommands(nextCandidateAction)} |\n`;
   }
   
-  repoActionLanes += `\n`;
+  repoActionLanes += `\n</details>\n\n`;
 }
-
-updateNamedSection(indexPath, 'repo-action-lanes', repoActionLanes);
 
 // 5. Generate Quality Gates by Repo
 let qualityGatesContent = `## Quality Gates by Repo
@@ -939,8 +966,6 @@ for (const id in systemsInsights) {
   qualityGatesContent += `| **${name}** | ${prReviewGate} | ${evidenceGate} | ${decisionGate} | ${humanReviewGate} | ${overallGate} |\n`;
 }
 
-updateNamedSection(indexPath, 'quality-gates-by-repo', qualityGatesContent);
-
 // 6. Generate Human Review Lane
 function getHumanReviewAction(task: any): { reason: string, action: string } {
   if (task.task === 'issue-12') {
@@ -963,13 +988,11 @@ let visualHumanReview = `## Needs Human Review
 if (needsReviewTasks.length > 0) {
   for (const t of needsReviewTasks) {
     const { reason, action } = getHumanReviewAction(t);
-    visualHumanReview += `| ${t.task} | ${reason} | ${action} |\n`;
+    visualHumanReview += `| ${t.task} | ${reason} | ${formatCommands(action)} |\n`;
   }
 } else {
   visualHumanReview += `| - | No tasks currently requiring human review. | None |\n`;
 }
-
-updateNamedSection(indexPath, 'visual-human-review', visualHumanReview);
 
 // 7. Generate Agent Advisory Signals
 let visualAgentAdvisory = `## Agent Advisory Signals
@@ -1001,7 +1024,7 @@ if (fs.existsSync(path.join(DASHBOARD_DIR, 'triage-suggestions.md'))) {
             operatorAction = 'Review roadmap boundary';
           }
           
-          visualAgentAdvisory += `| Triage Agent | ${sysName} | ${parts[4]} | ${parts[3]} | ${operatorAction} |\n`;
+          visualAgentAdvisory += `| Triage Agent | ${sysName} | ${formatCommands(parts[4])} | ${parts[3]} | ${formatCommands(operatorAction)} |\n`;
           triageSignalsFound = true;
         }
       }
@@ -1016,7 +1039,7 @@ if (evidenceGapsCount > 0) {
   for (const gap of evidenceGapsList) {
     const matchedItem = workItemsList.find(w => w.issue.toString() === gap.issue.replace('#', ''));
     const sysName = matchedItem ? matchedItem.system : 'Sprint';
-    visualAgentAdvisory += `| Evidence Agent | ${sysName} | ${gap.description} | High | Link PRs to backlog tasks |\n`;
+    visualAgentAdvisory += `| Evidence Agent | ${sysName} | ${formatCommands(gap.description)} | High | ${formatCommands('Link PRs to backlog tasks')} |\n`;
   }
 } else {
   visualAgentAdvisory += `| Evidence Agent | Tessera | Evidence complete | High | No action |\n`;
@@ -1024,7 +1047,7 @@ if (evidenceGapsCount > 0) {
 
 if (decisionGapsCount > 0) {
   for (const gap of decisionGapsList) {
-    visualAgentAdvisory += `| Decision Gap Agent | Sprint | ${gap.description} | High | Review generated decision drafts |\n`;
+    visualAgentAdvisory += `| Decision Gap Agent | Sprint | ${formatCommands(gap.description)} | High | Review generated decision drafts |\n`;
   }
 } else {
   visualAgentAdvisory += `| Decision Gap Agent | BrainBench | No open decision gaps | High | No action |\n`;
@@ -1033,9 +1056,7 @@ if (decisionGapsCount > 0) {
 const briefAction = needsReviewTasks.length > 0 
   ? `Review ${needsReviewTasks.map(t => '#' + t.task.replace('issue-', '')).join(', ')}`
   : 'No action';
-visualAgentAdvisory += `| Weekly Brief | Sprint | ${completedTasks} / ${totalTasks} complete | High | ${briefAction} |\n`;
-
-updateNamedSection(indexPath, 'visual-agent-advisory', visualAgentAdvisory);
+visualAgentAdvisory += `| Weekly Brief | Sprint | ${completedTasks} / ${totalTasks} complete | High | ${formatCommands(briefAction)} |\n`;
 
 // 8. Generate Repo-Specific Recommended Actions
 let repoRecommendedActions = `## Recommended Actions
@@ -1074,7 +1095,17 @@ for (const id in systemsInsights) {
   }
 }
 
-updateNamedSection(indexPath, 'repo-recommended-actions', repoRecommendedActions);
+// Compile the entire cockpit file
+compileIndexFile(indexPath, {
+  visualSnapshot,
+  visualSdlcFlow,
+  repoInsightMatrix,
+  qualityGatesContent,
+  visualHumanReview,
+  repoActionLanes,
+  visualAgentAdvisory,
+  repoRecommendedActions
+});
 
 // 9. Write execution log
 const dateStr = new Date().toISOString().split('T')[0];
