@@ -5,7 +5,7 @@ title: "Approve read-only simulated Telegram digest integration"
 date: 2026-06-27
 status: approved
 owner: Shailesh Rawat
-resolves: gap-2026-06-27-hermes-telegram-digest-gap
+resolves: gap-2026-06-27-9c31c46-toolsmith-script-architecture
 ---
 
 # Decision Record: Approve read-only simulated Telegram digest integration
@@ -21,4 +21,4 @@ To transition to V0.4.5, we implemented a simulated Telegram command adapter (`t
 5. **No Mutation**: No state files in the control plane are modified by any execution of this adapter.
 
 ## Gaps Resolved
-- Resolves: `gap-2026-06-27-hermes-telegram-digest-gap`
+- Resolves: `gap-2026-06-27-9c31c46-toolsmith-script-architecture`

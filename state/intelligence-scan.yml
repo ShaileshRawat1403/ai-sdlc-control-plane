@@ -1,6 +1,6 @@
 last_decision_gap_scan:
-  sha: 771e162229f53edce05ea186df31402e9fa822c8
-  scanned_at: 2026-06-27T08:15:12.823Z
+  sha: 9c31c4694406c99dd307501b803975d944d41b6f
+  scanned_at: 2026-06-27T08:19:37.778Z
   result: success
 open_gaps:
   - id: gap-2026-06-27-771e162-state-memory-model
@@ -38,6 +38,9 @@ resolved_gaps:
   - id: gap-2026-06-27-a3e094b-state-memory-model
     resolved_at: 2026-06-27T08:03:32.188Z
     by_decision: 2026-06-27-brainbench-v0.4.5-adapter-registration.md
+  - id: gap-2026-06-27-9c31c46-toolsmith-script-architecture
+    resolved_at: 2026-06-27T08:15:46.061Z
+    by_decision: 2026-06-27-brainbench-v0.4.5-hermes-telegram-digest.md
 dismissed_gaps:
   - id: gap-2026-06-25-2f4d757-state-memory-model
     dismissed_at: 2026-06-25T13:12:00.000Z
