@@ -23,37 +23,48 @@ describe('Telegram Digest Adapter Integration Tests', () => {
     expect(res.stdout).toContain('BrainBench Status');
     expect(res.stdout).toContain('Sprint:');
     expect(res.stdout).toContain('Human review:');
+    expect(res.stdout).toContain('Top 3 needing attention:');
+    expect(res.stdout).toContain('Source: dashboard/index.md');
   });
-
+ 
   test('/weekly is allowed', () => {
     const res = runCommand('/weekly');
     expect(res.code).toBe(0);
     expect(res.stdout).toContain('BrainBench Weekly Brief:');
     expect(res.stdout).toContain('Active Systems Count');
+    expect(res.stdout).toContain('Source: dashboard/weekly-report.md');
   });
-
+ 
   test('/handoffs is allowed', () => {
     const res = runCommand('/handoffs');
     expect(res.code).toBe(0);
     expect(res.stdout).toContain('BrainBench Repo Handoffs Status:');
+    expect(res.stdout).toContain('Daily Active:');
+    expect(res.stdout).toContain('Weekly Summary:');
+    expect(res.stdout).toContain('Paused / Dormant:');
+    expect(res.stdout).toContain('Source: bench/repo-handoffs/');
   });
-
+ 
   test('/blockers is allowed', () => {
     const res = runCommand('/blockers');
     expect(res.code).toBe(0);
     expect(res.stdout).toContain('Active Blockers');
+    expect(res.stdout).toContain('Action Required:');
+    expect(res.stdout).toContain('Source: dashboard/evidence-gaps.md');
   });
-
+ 
   test('/evidence is allowed', () => {
     const res = runCommand('/evidence');
     expect(res.code).toBe(0);
     expect(res.stdout).toContain('Validation Evidence Index:');
+    expect(res.stdout).toContain('Source: bench/validation/evidence-index.md');
   });
-
+ 
   test('/decisions is allowed', () => {
     const res = runCommand('/decisions');
     expect(res.code).toBe(0);
     expect(res.stdout).toContain('Active Decisions & Gaps:');
+    expect(res.stdout).toContain('Source: dashboard/decision-gaps.md');
   });
 
   test('/mark_done is rejected', () => {
