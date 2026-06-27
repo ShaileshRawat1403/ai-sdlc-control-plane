@@ -5,7 +5,7 @@ title: "Approve live local Telegram delivery for read-only BrainBench digests"
 date: 2026-06-27
 status: approved
 owner: Shailesh Rawat
-resolves: gap-2026-06-27-567683d-toolsmith-script-architecture
+resolves: gap-2026-06-27-567683d-toolsmith-script-architecture, gap-2026-06-27-3a24092-toolsmith-script-architecture
 ---
 
 # Decision Record: Approve live local Telegram delivery for read-only BrainBench digests
@@ -21,3 +21,4 @@ To transition to V0.4.6, we implemented a live local Telegram Bot integration da
 
 ## Gaps Resolved
 - Resolves: `gap-2026-06-27-567683d-toolsmith-script-architecture`
+- Resolves: `gap-2026-06-27-3a24092-toolsmith-script-architecture`
