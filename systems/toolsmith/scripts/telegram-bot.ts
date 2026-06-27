@@ -43,7 +43,8 @@ async function runBot() {
   // Webhook state cleanup on startup
   console.log('[Telegram Bot] Starting up. Cleaning up webhook state...');
   try {
-    const cleanWebhook = await fetch(`https://api.telegram.org/bot${botToken}/deleteWebhook?drop_pending_updates=false`);
+    const baseUrl = process.env.TELEGRAM_API_URL || 'https://api.telegram.org';
+    const cleanWebhook = await fetch(`${baseUrl}/bot${botToken}/deleteWebhook?drop_pending_updates=false`);
     const cleanRes = await cleanWebhook.json();
     console.log('[Telegram Bot] deleteWebhook result:', cleanRes.ok ? 'success' : 'failed');
   } catch (e) {
@@ -56,7 +57,8 @@ async function runBot() {
   
   while (true) {
     try {
-      const url = `https://api.telegram.org/bot${botToken}/getUpdates?offset=${offset}&timeout=30`;
+      const baseUrl = process.env.TELEGRAM_API_URL || 'https://api.telegram.org';
+      const url = `${baseUrl}/bot${botToken}/getUpdates?offset=${offset}&timeout=30`;
       const res = await fetch(url);
       const data = await res.json();
       
@@ -80,8 +82,9 @@ async function runBot() {
         // Chat whitelisting security check
         if (chatId !== allowedChatId) {
           console.warn(`[Telegram Bot] Ignored message from unauthorized chat ID: ${chatId}`);
+          const baseUrl = process.env.TELEGRAM_API_URL || 'https://api.telegram.org';
           try {
-            await fetch(`https://api.telegram.org/bot${botToken}/sendMessage`, {
+            await fetch(`${baseUrl}/bot${botToken}/sendMessage`, {
               method: 'POST',
               headers: { 'Content-Type': 'application/json' },
               body: JSON.stringify({
@@ -112,9 +115,10 @@ async function runBot() {
           }
 
           // Reply via sendMessage
+          const baseUrl = process.env.TELEGRAM_API_URL || 'https://api.telegram.org';
           try {
             const clamped = clampMessage(responseText);
-            await fetch(`https://api.telegram.org/bot${botToken}/sendMessage`, {
+            await fetch(`${baseUrl}/bot${botToken}/sendMessage`, {
               method: 'POST',
               headers: { 'Content-Type': 'application/json' },
               body: JSON.stringify({
@@ -156,8 +160,9 @@ async function main() {
     const responseText = digestRes.stdout || digestRes.stderr || 'No response output generated.';
     const clamped = clampMessage(responseText);
     
+    const baseUrl = process.env.TELEGRAM_API_URL || 'https://api.telegram.org';
     try {
-      const pushRes = await fetch(`https://api.telegram.org/bot${botToken}/sendMessage`, {
+      const pushRes = await fetch(`${baseUrl}/bot${botToken}/sendMessage`, {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({
