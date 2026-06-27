@@ -1,6 +1,6 @@
 last_decision_gap_scan:
-  sha: a8978f624f3828f7ee7d533124a2974e1eadb7ec
-  scanned_at: 2026-06-27T07:36:04.813Z
+  sha: a3e094be8f8e6d365eec47ed4a830dee0b57f867
+  scanned_at: 2026-06-27T08:04:19.306Z
   result: success
 open_gaps: []
 resolved_gaps:
@@ -27,6 +27,9 @@ resolved_gaps:
     by_decision: 2026-06-27-brainbench-v0.4.4-handoff-approval.md
   - id: gap-2026-06-27-11002a6-state-memory-model
     resolved_at: 2026-06-27T07:36:04.786Z
+    by_decision: 2026-06-27-brainbench-v0.4.5-adapter-registration.md
+  - id: gap-2026-06-27-a3e094b-state-memory-model
+    resolved_at: 2026-06-27T08:03:32.188Z
     by_decision: 2026-06-27-brainbench-v0.4.5-adapter-registration.md
 dismissed_gaps:
   - id: gap-2026-06-25-2f4d757-state-memory-model

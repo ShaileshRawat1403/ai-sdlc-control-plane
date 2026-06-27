@@ -5,6 +5,10 @@ adapters:
     runtime: Hermes
     kernel: Flowright
     scope: observation_only
+    status: active_registered
+    remote_status: provisioned
+    repository: https://github.com/sans-serif-systems/adapter-hermes
+    version: v0.1-read-only-intent-bridge
     allowed_modes:
       - observe
       - summarize

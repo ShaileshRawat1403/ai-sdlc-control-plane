@@ -1,5 +1,5 @@
 # BrainBench V0.4.3: Visual Command Cockpit
-Generated: 2026-06-27T07:36:04Z
+Generated: 2026-06-27T08:04:19Z
 
 <!-- brainbench:generated:visual-snapshot:start -->
 
@@ -21,9 +21,9 @@ Generated: 2026-06-27T07:36:04Z
 > ### Open Evidence Gaps: 1
 > Status: `Attention`
 
-> [!WARNING]
-> ### Open Decision Gaps: 1
-> Status: `Attention`
+> [!NOTE]
+> ### Open Decision Gaps: 0
+> Status: `Clear`
 
 > [!NOTE]
 > ### Human Review: 0
@@ -43,7 +43,7 @@ flowchart LR
   end
   subgraph Governance [Governance]
     direction LR
-    PrReview["PR Review: 0"] --> Evidence["Evidence: 1"] --> Decision["Decision: 1"]
+    PrReview["PR Review: 0"] --> Evidence["Evidence: 1"] --> Decision["Decision: 0"]
   end
   subgraph Closure [Closure]
     Done["Done: 7"]
@@ -61,7 +61,7 @@ flowchart LR
   InProgress:::active
   PrReview:::clear
   Evidence:::warning
-  Decision:::warning
+  Decision:::clear
   Done:::done
 ```
 
@@ -290,7 +290,7 @@ flowchart LR
 | Triage Agent | toolsmith | Default low priority assignment. Warning: has unassigned owner, unassigned priority. | `low` | Review roadmap boundary |
 | Triage Agent | rook | Touches active core SDLC verification system: rook. | `high` | Review triage suggestions |
 | Evidence Agent | rook | Work item is in status `done` but has no mapped PR number in its frontmatter. | High | Link PRs to backlog tasks |
-| Decision Gap Agent | Sprint | `state/repo-agent-registry.yml` | High | Review generated decision drafts |
+| Decision Gap Agent | BrainBench | No open decision gaps | High | No action |
 | Weekly Brief | Sprint | 7 / 7 complete | High | No action |
 
 <!-- brainbench:generated:visual-agent-advisory:end -->

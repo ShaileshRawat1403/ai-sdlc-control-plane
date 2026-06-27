@@ -5,7 +5,7 @@ title: "Approve adapter-hermes Registration in BrainBench"
 date: 2026-06-27
 status: approved
 owner: Shailesh Rawat
-resolves: gap-2026-06-27-11002a6-state-memory-model
+resolves: gap-2026-06-27-11002a6-state-memory-model, gap-2026-06-27-a3e094b-state-memory-model
 ---
 
 # Decision Record: Approve adapter-hermes Registration
@@ -21,6 +21,7 @@ To transition to V0.4.5, we registered the newly developed `adapter-hermes` V0.1
 
 ## Gaps Resolved
 - Resolves: `gap-2026-06-27-11002a6-state-memory-model`
+- Resolves: `gap-2026-06-27-a3e094b-state-memory-model`
 
 ## Implementation Verification
 - Verified that `state/adapter-registry.yml` exists and conforms to the registry model.
