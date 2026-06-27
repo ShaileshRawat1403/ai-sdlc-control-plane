@@ -5,7 +5,7 @@ title: "Approve live local Telegram delivery for read-only BrainBench digests"
 date: 2026-06-27
 status: approved
 owner: Shailesh Rawat
-resolves: gap-2026-06-27-telegram-delivery-gap
+resolves: gap-2026-06-27-567683d-toolsmith-script-architecture
 ---
 
 # Decision Record: Approve live local Telegram delivery for read-only BrainBench digests
@@ -20,4 +20,4 @@ To transition to V0.4.6, we implemented a live local Telegram Bot integration da
 4. **Audit and Non-Mutation**: Every command, including rejected mutation requests, continues to emit audit evidence. No state files in the control plane are modified by any execution of this adapter.
 
 ## Gaps Resolved
-- Resolves: `gap-2026-06-27-telegram-delivery-gap`
+- Resolves: `gap-2026-06-27-567683d-toolsmith-script-architecture`

@@ -9,9 +9,9 @@ status: success
 
 ## Execution Summary
 - **Open Gaps**: 1
-- **Resolved Gaps**: 10
+- **Resolved Gaps**: 11
 - **Dismissed Gaps**: 13
-- **Comparison Window**: 9c31c4694406c99dd307501b803975d944d41b6f -> 7fc0609b37ccc25c8d3900ef7ca8f113eabaef74
+- **Comparison Window**: 567683d1718526a0609733d136f99c6279b57a2c -> 567683d1718526a0609733d136f99c6279b57a2c
 - **Dry Run**: false
 
 ## Actions Taken
