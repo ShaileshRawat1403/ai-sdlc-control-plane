@@ -3,11 +3,11 @@ FROM oven/bun:1.0-alpine
 
 WORKDIR /app
 
-# Copy lock and dependency manifests
-COPY package.json ./
+# Copy dependency manifests from toolsmith
+COPY systems/toolsmith/package.json systems/toolsmith/bun.lock* ./systems/toolsmith/
 
-# Install dependencies (production only)
-RUN bun install --production
+# Install dependencies
+RUN cd systems/toolsmith && bun install
 
 # Copy source repository files
 COPY . .
