@@ -5,7 +5,7 @@
 ## Active Quality & Operations Findings
 
 - **Detected Evidence Gaps**: 1
-- **Detected Decision Gaps**: 0
+- **Detected Decision Gaps**: 1
 - **Detected Triage Warnings**: 2
 
 ### Detail Dashboards

@@ -6,6 +6,6 @@
 
 | Gap ID | Issue | Description | Status |
 |---|---|---|---|
-| `evidence-gap-issue-12-missing-pr-mapping` | #12 | Work item is in status `ready-for-review` but has no mapped PR number in its frontmatter. | `ready-for-review` |
+| `evidence-gap-issue-12-missing-pr-mapping` | #12 | Work item is in status `done` but has no mapped PR number in its frontmatter. | `done` |
 
 <!-- brainbench:generated:end -->

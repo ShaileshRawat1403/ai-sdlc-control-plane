@@ -1,5 +1,5 @@
 # BrainBench V0.4.3: Visual Command Cockpit
-Generated: 2026-06-26T18:55:31Z
+Generated: 2026-06-27T03:38:20Z
 
 <!-- brainbench:generated:visual-snapshot:start -->
 
@@ -198,7 +198,7 @@ flowchart LR
 | Decision gaps | Clear | No action |
 
 **Handoff Summary**:
-- **Latest handoff**: [2026-W26 weekly](file:///Users/ananyalayek/.gemini/antigravity/scratch/brainbench/bench/repo-handoffs/weekly/2026-W26-flowright.md)
+- **Latest handoff**: [2026-W26 weekly](file:///home/runner/work/brainbench/brainbench/bench/repo-handoffs/weekly/2026-W26-flowright.md)
 - **Freshness**: Fresh
 - **Signal**: Monitored DAX/Rook build loop compliance and updated integration notes.
 - **Needs BrainBench**: None
@@ -218,7 +218,7 @@ flowchart LR
 | Decision gaps | Clear | No action |
 
 **Handoff Summary**:
-- **Latest handoff**: [2026-06-26 daily](file:///Users/ananyalayek/.gemini/antigravity/scratch/brainbench/bench/repo-handoffs/daily/2026-06-26-toolsmith.md)
+- **Latest handoff**: [2026-06-26 daily](file:///home/runner/work/brainbench/brainbench/bench/repo-handoffs/daily/2026-06-26-toolsmith.md)
 - **Freshness**: Fresh
 - **Signal**: Implemented and verified the `getLatestHandoff` logic in dashboard-refresh.ts.
 - **Needs BrainBench**: None
@@ -238,7 +238,7 @@ flowchart LR
 | Decision gaps | Clear | No action |
 
 **Handoff Summary**:
-- **Latest handoff**: [2026-06-26 daily](file:///Users/ananyalayek/.gemini/antigravity/scratch/brainbench/bench/repo-handoffs/daily/2026-06-26-tessera.md)
+- **Latest handoff**: [2026-06-26 daily](file:///home/runner/work/brainbench/brainbench/bench/repo-handoffs/daily/2026-06-26-tessera.md)
 - **Freshness**: Fresh
 - **Signal**: Drafted a set of reusable step templates for file operations and CLI invocation.
 - **Needs BrainBench**: None
@@ -342,8 +342,8 @@ flowchart LR
 <!-- brainbench:generated:repo-recommended-actions:end -->
 
 ## Latest Operator Briefs
-- [Daily Pulse (Operations)](file:///Users/ananyalayek/.gemini/antigravity/scratch/brainbench/dashboard/daily-report.md)
-- [Weekly Review (Trends)](file:///Users/ananyalayek/.gemini/antigravity/scratch/brainbench/dashboard/weekly-report.md)
+- [Daily Pulse (Operations)](file:///home/runner/work/brainbench/brainbench/dashboard/daily-report.md)
+- [Weekly Review (Trends)](file:///home/runner/work/brainbench/brainbench/dashboard/weekly-report.md)
 
 ## Operator Notes
 
