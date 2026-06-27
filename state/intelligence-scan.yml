@@ -1,6 +1,6 @@
 last_decision_gap_scan:
-  sha: 715278914ee412eacaec0ee637ca919eef34aacf
-  scanned_at: 2026-06-27T12:57:39.457Z
+  sha: db6fc28dee2d6594fe3c809d469bd4554f6917a6
+  scanned_at: 2026-06-27T13:03:45.163Z
   result: success
 open_gaps:
   - id: gap-2026-06-27-771e162-state-memory-model
@@ -50,6 +50,9 @@ resolved_gaps:
   - id: gap-2026-06-27-1992e31-toolsmith-script-architecture
     resolved_at: 2026-06-27T11:40:45.481Z
     by_decision: 2026-06-27-brainbench-v0.4.7-digest-quality.md
+  - id: gap-2026-06-27-db6fc28-toolsmith-script-architecture
+    resolved_at: 2026-06-27T12:58:08.479Z
+    by_decision: 2026-06-27-brainbench-v0.4.8-railway-deployment.md
 dismissed_gaps:
   - id: gap-2026-06-25-2f4d757-state-memory-model
     dismissed_at: 2026-06-25T13:12:00.000Z

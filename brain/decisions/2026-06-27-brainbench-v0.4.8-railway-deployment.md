@@ -5,7 +5,7 @@ title: "Approve container packaging, Railway deployment config, and daemon-level
 date: 2026-06-27
 status: approved
 owner: Shailesh Rawat
-resolves: gap-2026-06-27-railway-deployment-gap
+resolves: gap-2026-06-27-db6fc28-toolsmith-script-architecture
 ---
 
 # Decision Record: Approve container packaging, Railway deployment config, and daemon-level scheduled delivery of read-only Telegram digests
@@ -20,4 +20,4 @@ To transition to V0.4.8, we packaged the Telegram bot daemon for production host
 4. **Environment Security**: Sensitive keys (`TELEGRAM_BOT_TOKEN`, `TELEGRAM_ALLOWED_CHAT_ID`) are configured exclusively via the hosting dashboard. The local `.env` is ignored by Git, and `.dockerignore` prevents it from being baked into the build image.
 
 ## Gaps Resolved
-- Resolves: `gap-2026-06-27-railway-deployment-gap`
+- Resolves: `gap-2026-06-27-db6fc28-toolsmith-script-architecture`
