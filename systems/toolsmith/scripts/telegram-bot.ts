@@ -25,6 +25,94 @@ function clampMessage(text: string): string {
   return text;
 }
 
+function getKolkataTime(simulatedDate?: Date): { hour: number; minute: number; weekdayStr: string; dateString: string } {
+  const targetDate = simulatedDate || new Date();
+  
+  const formatter = new Intl.DateTimeFormat('en-US', {
+    timeZone: 'Asia/Kolkata',
+    hour: 'numeric',
+    minute: 'numeric',
+    hour12: false,
+    year: 'numeric',
+    month: '2-digit',
+    day: '2-digit'
+  });
+  
+  const parts = formatter.formatToParts(targetDate);
+  const partMap: Record<string, string> = {};
+  for (const part of parts) {
+    partMap[part.type] = part.value;
+  }
+  
+  const hour = parseInt(partMap.hour, 10);
+  const minute = parseInt(partMap.minute, 10);
+  
+  const weekdayFormatter = new Intl.DateTimeFormat('en-US', { timeZone: 'Asia/Kolkata', weekday: 'long' });
+  const weekdayStr = weekdayFormatter.format(targetDate);
+  
+  const dateString = `${partMap.year}-${partMap.month}-${partMap.day}`;
+  
+  return { hour, minute, weekdayStr, dateString };
+}
+
+function shouldFireDaily(hour: number, minute: number, dateString: string, lastSentDailyDate: string): boolean {
+  return hour === 18 && minute === 0 && dateString !== lastSentDailyDate;
+}
+
+function shouldFireWeekly(hour: number, minute: number, weekdayStr: string, dateString: string, lastSentWeeklyDate: string): boolean {
+  return hour === 18 && minute === 0 && weekdayStr === 'Sunday' && dateString !== lastSentWeeklyDate;
+}
+
+function startScheduler(botToken: string, allowedChatId: number) {
+  let lastDailySentDate = '';
+  let lastWeeklySentDate = '';
+  
+  console.log('[Telegram Bot] Starting background scheduler check (Asia/Kolkata, dedupe: process-local)...');
+  
+  setInterval(async () => {
+    try {
+      const nowKolkata = getKolkataTime();
+      if (shouldFireDaily(nowKolkata.hour, nowKolkata.minute, nowKolkata.dateString, lastDailySentDate)) {
+        lastDailySentDate = nowKolkata.dateString;
+        console.log(`[Scheduler] Firing scheduled daily status digest...`);
+        const digestRes = executeDigest('/status');
+        const responseText = digestRes.stdout || digestRes.stderr || 'No response output generated.';
+        const clamped = clampMessage(responseText);
+        
+        const baseUrl = process.env.TELEGRAM_API_URL || 'https://api.telegram.org';
+        await fetch(`${baseUrl}/bot${botToken}/sendMessage`, {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({
+            chat_id: allowedChatId,
+            text: clamped
+          })
+        });
+      }
+      
+      if (shouldFireWeekly(nowKolkata.hour, nowKolkata.minute, nowKolkata.weekdayStr, nowKolkata.dateString, lastWeeklySentDate)) {
+        lastWeeklySentDate = nowKolkata.dateString;
+        console.log(`[Scheduler] Firing scheduled weekly status digest...`);
+        const digestRes = executeDigest('/weekly');
+        const responseText = digestRes.stdout || digestRes.stderr || 'No response output generated.';
+        const clamped = clampMessage(responseText);
+        
+        const baseUrl = process.env.TELEGRAM_API_URL || 'https://api.telegram.org';
+        await fetch(`${baseUrl}/bot${botToken}/sendMessage`, {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({
+            chat_id: allowedChatId,
+            text: clamped
+          })
+        });
+      }
+    } catch (e) {
+      console.error('[Scheduler] Exception in background scheduler tick:', e);
+    }
+  }, 10000); // Check every 10 seconds
+}
+
 async function runBot() {
   const botToken = process.env.TELEGRAM_BOT_TOKEN;
   const allowedChatIdStr = process.env.TELEGRAM_ALLOWED_CHAT_ID;
@@ -50,6 +138,9 @@ async function runBot() {
   } catch (e) {
     console.error('[Telegram Bot] Failed to call deleteWebhook during startup.');
   }
+
+  // Start background schedule triggers
+  startScheduler(botToken, allowedChatId);
 
   console.log('[Telegram Bot] Starting getUpdates long polling loop...');
 
@@ -183,7 +274,7 @@ async function main() {
   }
 }
 
-export { runBot, executeDigest, clampMessage, main };
+export { runBot, executeDigest, clampMessage, main, getKolkataTime, shouldFireDaily, shouldFireWeekly };
 
 if (import.meta.main) {
   main();

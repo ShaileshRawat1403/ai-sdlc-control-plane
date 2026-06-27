@@ -11,7 +11,7 @@ status: success
 - **Open Gaps**: 1
 - **Resolved Gaps**: 13
 - **Dismissed Gaps**: 13
-- **Comparison Window**: 1992e31211156e913690cc4f7a1e762653303185 -> 1992e31211156e913690cc4f7a1e762653303185
+- **Comparison Window**: 1992e31211156e913690cc4f7a1e762653303185 -> 715278914ee412eacaec0ee637ca919eef34aacf
 - **Dry Run**: false
 
 ## Actions Taken

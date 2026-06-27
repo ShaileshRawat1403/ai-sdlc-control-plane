@@ -360,7 +360,7 @@ function main() {
   const tmpIntentPath = path.join(tmpDir, `${safeCmdName}.json`);
   fs.writeFileSync(tmpIntentPath, JSON.stringify(intentJson, null, 2), 'utf-8');
 
-  const adapterPath = '/Users/ananyalayek/.gemini/antigravity/scratch/adapter-hermes/src/index.ts';
+  const adapterPath = process.env.ADAPTER_HERMES_PATH || path.resolve(REPO_ROOT, '../adapter-hermes/src/index.ts');
   const requestOutputDir = path.resolve(REPO_ROOT, 'tmp/hermes-requests');
   const auditDir = path.resolve(REPO_ROOT, 'bench/agent-runs/hermes');
 
