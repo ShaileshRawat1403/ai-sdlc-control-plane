@@ -1,6 +1,6 @@
 last_decision_gap_scan:
-  sha: 219bc21e35dc1e32c7b701a5212c1550a3e87dfb
-  scanned_at: 2026-06-27T13:13:12.736Z
+  sha: 079756a546068cad082e0293fff8028af5ff6ee5
+  scanned_at: 2026-06-28T04:01:37.636Z
   result: success
 open_gaps:
   - id: gap-2026-06-27-771e162-state-memory-model
@@ -10,6 +10,13 @@ open_gaps:
     files:
       - state/adapter-registry.yml
     draft_file: brain/decisions/drafts/draft-771e162-state-memory-model.md
+  - id: gap-2026-06-28-079756a-toolsmith-script-architecture
+    theme: toolsmith-script-architecture
+    description: Restricted paths under theme `toolsmith-script-architecture` were
+      modified in comparison window without a matching decision log.
+    files:
+      - systems/toolsmith/scripts/telegram-smoke-runner.ts
+    draft_file: brain/decisions/drafts/draft-079756a-toolsmith-script-architecture.md
 resolved_gaps:
   - id: gap-2026-06-25-c57f749-state-memory-model
     resolved_at: 2026-06-25T03:20:20.914Z
